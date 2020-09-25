@@ -3,7 +3,7 @@
 2D게임프로그래밍 텀프로젝트 내용이다.
 
 ## SIHAW TOWN
-![enter image description here](https://lh3.googleusercontent.com/proxy/4WQ4Qvcyfhxm6KTNvsYa-shnF_ffgvAEtNKwxvnDHvvoEKjtYXvO7VDlP_SiYGSOejtYwlFEx-MKbgw)
+![enter image description here](https://i.esdrop.com/d/XTKNGpeIot.jpg)
 시화타운은 스타듀밸리를 원작으로 한 카피 게임이다.
 >스타듀밸리는 농장경영 게임이며 4계절 특성에 맞는 작물을 키워 농장을 발전 시키는 게임이다. 농사, 채집, 낚시, 채광 등으로 돈을 벌 수 있으며 돈은 집, 농장, 도구 등을 업그레이드 하는데 주로 사용한다. 마을 npc와 호감도를 쌓을 수 있으며 게임 내 다양한 이벤트가 있다.
 
@@ -48,17 +48,8 @@
 - TextBox, 아이템, 캐릭터, 아이콘 등 객체들로 이루어진다.
 
 **Game State Diagram**
-```mermaid
-graph TD;
-    Start_State--일정시간 지난 후-->Title_State;
-    Title_State--종료 버튼-->Quit;
-    Title_State--시작 버튼-->Main_State;
-    Main_State--ESC 키-->Menu_State;
-    Main_State--상점 이용-->Shop_State;
-    Shop_State--나가기-->Main_State;
-    Menu_State--ESC 키-->Main_State;
-    Menu_State--종료 버튼-->Quit;
- ```
+
+![enter image description here](https://i.esdrop.com/d/auqZDlouwd.PNG)
 ## 필요한 기술
 **배운 기술**
 - Map Tool
