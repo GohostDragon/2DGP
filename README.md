@@ -4,6 +4,7 @@
 
 ## SIHAW TOWN
 ![enter image description here](https://i.esdrop.com/d/XTKNGpeIot.jpg)
+
 시화타운은 스타듀밸리를 원작으로 한 카피 게임이다.
 >스타듀밸리는 농장경영 게임이며 4계절 특성에 맞는 작물을 키워 농장을 발전 시키는 게임이다. 농사, 채집, 낚시, 채광 등으로 돈을 벌 수 있으며 돈은 집, 농장, 도구 등을 업그레이드 하는데 주로 사용한다. 마을 npc와 호감도를 쌓을 수 있으며 게임 내 다양한 이벤트가 있다.
 
@@ -13,18 +14,21 @@
 **GamaeState**는 총 5개로 구성되어있다.
 각 **GameState**마다 이동 조건은 밑에 다이어그램으로 표현하였다.
 ![enter image description here](https://i.esdrop.com/d/AZTYUHU8Kp.jpg)
+
 **Start_State**
 - 게임 시작시 가장 먼저 보여주는 GameState이다.
 - 키, 마우스 이벤트는 존재 하지 않는다.
 - 객체는 로고 화면만 보여준다.
 
 ![enter image description here](https://i.esdrop.com/d/RD2MMuPjl5.jpg)
+
 **Title_State**
 - 게임 시작 및 게임 나가기를 선택할 수 있는 타이틀이다.
 - 마우스 이벤트만 존재하며 마우스 왼쪽 클릭으로 진행한다.
 - 객체는 타이틀 화면과 아이콘으로 구성된다.
 
 ![enter image description here](https://mblogthumb-phinf.pstatic.net/MjAxODA3MTZfMzEg/MDAxNTMxNzE5NjgwNDU1.hTAosRMRD48Piu20tVCIhQCVmVDQqKYtYObGH930ypEg.fUKvaX6RlbSEWsNVLcRUVU9QUJFr_HocLARLd8Tbcz8g.PNG.elancia_0/08.png?type=w800)
+
 **Main_State**
 - 게임의 핵심 메인 스테이트이다.
 - 키 입력은 w, a, s, d 로 움직이고 마우스 왼쪽 클릭으로 도구를 사용하며, 오른쪽 클릭으로 상호작용한다. 그리고 마우스 휠로 아이템을 바꾼다.
@@ -33,6 +37,7 @@
 - 캐릭터들은 프레임과 sprite_sheet를 이용해 애니메이션으로 구현한다.
 
 ![enter image description here](https://postfiles.pstatic.net/MjAxODEwMzBfMTgy/MDAxNTQwODMzODA0NTY1.xfeNK24S0YWngGsdQ0dVLZIaG_ArgPlnJ245J6jiQisg.UCq8IpMkvzqsOshgYczpSqDTqezagpbA9yYD83JzBmgg.PNG.900pixel/image_6559740771540833773088.png?type=w773)
+
 **Shop_State**
 - 상점을 이용하는 State이다.
 - 아이템을 사고 팔고 하는 공간이다.
@@ -42,6 +47,7 @@
 
 
 ![enter image description here](https://img1.daumcdn.net/thumb/R720x0.q80/?scode=mtistory2&fname=http://cfile27.uf.tistory.com/image/224E9E4858D638552E19B6)
+
 **Menu_State**
 - 아이템, 호감도, 종료 등 게임의 전반적인 캐릭터 상태, 시스템을 관리하는 시스템이다.
 - 마우스 이벤트만 존재하며, 왼쪽 클릭으로 상호작용한다.
@@ -49,7 +55,8 @@
 
 **Game State Diagram**
 
-![enter image description here](https://i.esdrop.com/d/auqZDlouwd.PNG)
+![enter image description here](https://i.esdrop.com/d/uJWwiSEPc0.png)
+
 ## 필요한 기술
 **배운 기술**
 - Map Tool
@@ -63,5 +70,6 @@
 **요청할 기술**
 ![enter image description here](https://i.esdrop.com/d/o2au5X0yZQ.png)
 ![enter image description here](https://i.esdrop.com/d/zBMH6zuX0I.png)
+
 - 머리카락이 이런 파일로 존재할 때 플레이가 원하는 색깔을 지정하면 그 색깔에 맞게 머리카락 색을 바꿔주는 스킬을 알고 싶습니다. 스킬 이름을 몰라 이렇게 예시로 설명했습니다.
 - 예시로 머리카락을 들었지만 플레이어 피부색, 옷 색 뿐만 아니라 자동차 색들 다양한 방면에 사용할 수 있을 거 같아 꼭 배우고 싶습니다.
