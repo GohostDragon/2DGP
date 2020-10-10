@@ -57,6 +57,37 @@
 
 ![enter image description here](https://i.esdrop.com/d/uJWwiSEPc0.png)
 
+
+## 게임의 흐름
+
+![enter image description here](https://i.esdrop.com/d/46xEjTUsdz.png)
+
+- 곡괭이, 도끼로 장애물인 나무와 돌을 제거해 농사지을 땅을 확보한다.
+- 농사 지을 땅을 확보하면 괭이로 땅을 고르게 한다.
+- 고르게 된 땅에 씨앗을 심는다.
+
+![enter image description here](https://i.esdrop.com/d/C06mWCPGBT.png)
+
+- 매일 씨앗에 물을 준다
+- 하루하루 지날 수록 씨앗이 자란다.
+
+![enter image description here](https://i.esdrop.com/d/TinVO51Nnj.png)
+
+- 다 자란 작물을 수확하여 수확통이나 상점에 판다.
+- 팔면 돈을 얻고 얻은 돈으로 씨앗이나 물품을 구매한다.
+- 또는 농장을 발전시키는데 돈을 사용한다.
+
+## 개발 범위 및 일정
+
+**개발 범위**
+
+![enter image description here](https://i.esdrop.com/d/qdQzyh47fA.PNG)
+
+**개발 일정**
+
+![enter image description here](https://i.esdrop.com/d/mxuru7uiS7.PNG)
+
+
 ## 필요한 기술
 **배운 기술**
 - Map Tool
