@@ -15,6 +15,22 @@ class Player:
         (SDL_KEYUP, SDLK_DOWN):    ( 0,  1),
         (SDL_KEYUP, SDLK_UP):      ( 0, -1),
     }
+
+    KEY_ITEM_MAP = {
+        (SDL_KEYDOWN, SDLK_1): (573,63),
+        (SDL_KEYDOWN, SDLK_2): (573+64,63),
+        (SDL_KEYDOWN, SDLK_3): (573+64*2,63),
+        (SDL_KEYDOWN, SDLK_4): (573+64*3,63),
+        (SDL_KEYDOWN, SDLK_5): (573+64*4, 63),
+        (SDL_KEYDOWN, SDLK_6): (573 + 64*5, 63),
+        (SDL_KEYDOWN, SDLK_7): (573 + 64 * 6, 63),
+        (SDL_KEYDOWN, SDLK_8): (573 + 64 * 7, 63),
+        (SDL_KEYDOWN, SDLK_9): (573 + 64 * 8, 63),
+        (SDL_KEYDOWN, SDLK_0): (573 + 64 * 9, 63),
+        (SDL_KEYDOWN, SDLK_MINUS): (573 + 64 * 10, 63),
+        (SDL_KEYDOWN, SDLK_EQUALS): (573 + 64 * 11, 63),
+    }
+
     KEYDOWN_SPACE  = (SDL_KEYDOWN, SDLK_SPACE)
     KEYDOWN_LSHIFT = (SDL_KEYDOWN, SDLK_LSHIFT)
     KEYUP_LSHIFT   = (SDL_KEYUP,   SDLK_LSHIFT)
@@ -40,8 +56,11 @@ class Player:
 
         self.ui_menu_image = gfw.image.load(gobj.RES_DIR + '/menustate_ui1.png')
 
-        self.item_tool = gfw.image.load(gobj.RES_DIR + '/tools.png')
-
+        self.item_tool = []
+        self.item_tool.append(gfw.image.load(gobj.RES_DIR + '/tools.png'))
+        self.item_tool.append(gfw.image.load(gobj.RES_DIR + '/tools.png'))
+        self.item_tool.append(gfw.image.load(gobj.RES_DIR + '/tools.png'))
+        self.item_tool.append(gfw.image.load(gobj.RES_DIR + '/tools.png'))
 
         self.anim = 0
         self.time = 0
@@ -53,6 +72,7 @@ class Player:
 
         self.mouse = False
         self.iven_pos = (573,63)
+        self.inven = [1,2,3,4]
         self.item = 1
 
         self.menustate = False
@@ -70,18 +90,30 @@ class Player:
 
         sx = self.fidx * width
         sy = self.action * height
+
+        pos = self.bg.to_screen(self.pos)
         if self.mirror == True:
-            self.image[self.anim].clip_composite_draw(sx, sy, width, height,0,'h', *self.pos,width,height)
+            self.image[self.anim].clip_composite_draw(sx, sy, width, height,0,'h', *pos,width,height)
         else:
-            self.image[self.anim].clip_draw(sx, sy, width, height, * self.pos)
+            self.image[self.anim].clip_draw(sx, sy, width, height, *pos)
 
         if self.menustate == False:
             self.ui_image[0].draw(960,100)
             self.ui_image[1].clip_draw(332, 2256 - 432 - 57, 73, 57, 1760, 950, 73 * 4, 57 * 4)
 
+            self.item_tool[0].clip_draw(79, 384 - (64 * 0 + 48), 17, 17, 604 + 64 * 0, 100, 17 * 4, 17 * 4)
+            self.item_tool[1].clip_draw(79, 384 - (64 * 1 + 48), 17, 17, 604 + 64 * 1, 100, 17 * 4, 17 * 4)
+            self.item_tool[2].clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * 2, 100, 17 * 4, 17 * 4)
+            self.item_tool[3].clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * 3, 100, 17 * 4, 17 * 4)
+
             self.drawitemrec()
         else:
             self.ui_menu_image.draw(960, 540)
+
+            self.item_tool[0].clip_draw(79, 384 - (48 + 64 * 0), 17, 17, 604 + 64 * 0, 760, 17 * 4, 17 * 4)
+            self.item_tool[1].clip_draw(79, 384 - (64 * 1 + 48), 17, 17, 604 + 64 * 1, 760, 17 * 4, 17 * 4)
+            self.item_tool[2].clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * 2, 760, 17 * 4, 17 * 4)
+            self.item_tool[3].clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * 3, 760, 17 * 4, 17 * 4)
 
     def update(self):
         if self.anim < 1:
@@ -145,6 +177,10 @@ class Player:
         elif pair == Player.KEYDOWN_E:
             self.menustate = False if self.menustate == True else True
 
+        elif pair in Player.KEY_ITEM_MAP:
+            self.iven_pos = Player.KEY_ITEM_MAP[pair]
+
+
         if e.type == SDL_MOUSEBUTTONDOWN:
             self.mouse = True
             if self.item > 0 and self.anim < 1 and self.fmax == 1:
@@ -167,6 +203,19 @@ class Player:
                         self.fmax = 5
         elif e.type == SDL_MOUSEBUTTONUP:
             self.mouse = False
+
+        elif e.type == SDL_MOUSEWHEEL:
+            print('mouse wheel')
+            if e.wheel.y > 0:
+                if self.iven_pos[0] == 573 + 64 * 11:
+                    self.iven_pos[0] = 573
+                else:
+                    self.iven_pos[0] += 64
+            elif e.wheel.y < 0:
+                if self.iven_pos[0] == 573:
+                    self.iven_pos[0] = 573 + 64 * 11
+                else:
+                    self.iven_pos[0] -= 64
 
     def get_bb(self):
         hw = 20

@@ -5,6 +5,8 @@ from player import Player
 from zombie import Zombie
 import gobj
 
+from background import FixedBackground as Background
+
 canvas_width = 1920
 canvas_height = 1080
 
@@ -22,8 +24,14 @@ def enter():
         player = Player()
         gfw.world.add(gfw.layer.player, player)
 
-        bg = gobj.ImageObject('kpu_1280x960.png', (canvas_width // 2, canvas_height // 2))
+        #bg = gobj.ImageObject('town.jpg', (canvas_width // 2, canvas_height // 2))
+        #gfw.world.add(gfw.layer.bg, bg)
+        bg = Background('town.png')
+
+        player.bg = bg
+        #bg.set_fixed_pos(100, 100)
         gfw.world.add(gfw.layer.bg, bg)
+        bg.target = player
 
     global zombie_time
     zombie_time = 1
