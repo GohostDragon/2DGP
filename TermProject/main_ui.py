@@ -11,11 +11,16 @@ class Main_UI:
         self.right, self.y = right, y
         self.image = gfw.image.load(gobj.RES_DIR + '/number_24x32.png')
         self.digit_width = self.image.w // 10
+        self.reset()
+
+    def reset(self):
         self.money = 0
+        self.display = 0
 
     def draw(self):
         x = self.right
-        money = self.money
+        #money = self.money
+        money = self.display
         while money > 0:
             digit = money % 10
             sx = digit * self.digit_width
@@ -26,4 +31,7 @@ class Main_UI:
             money //= 10
 
     def update(self):
-    	pass
+        if self.display < self.money:
+            self.display += 9
+        else:
+            self.display = self.money

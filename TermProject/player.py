@@ -70,7 +70,6 @@ class Player:
         self.mag = 1
         self.mirror = False
 
-        self.mouse = False
         self.iven_pos = (573,63)
         self.inven = [1,2,3,4]
         self.item = 1
@@ -131,14 +130,11 @@ class Player:
         #self.fidx = int(frame) % self.fmax
         self.fidx = (self.fidx + 1) % self.fmax
         if self.anim > 0 and self.fidx == 0:
-            self.anim = 0
-            self.fmax = 1
-            self.fidx = 0
-            self.delta = (0, 0)
+            self.set_pause()
 
     def handle_event(self, e):
         pair = (e.type, e.key)
-        if pair in Player.KEY_MAP and self.anim < 1 and self.mouse == False:
+        if pair in Player.KEY_MAP and self.anim < 1:
             pdx = self.delta[0]
             self.delta = gobj.point_add(self.delta, Player.KEY_MAP[pair])
             dx = self.delta[0]
@@ -175,14 +171,14 @@ class Player:
         elif pair == Player.KEYUP_LSHIFT:
             self.mag //= 2
         elif pair == Player.KEYDOWN_E:
-            self.menustate = False if self.menustate == True else True
+            pass
+            #self.menustate = False if self.menustate == True else True
 
         elif pair in Player.KEY_ITEM_MAP:
             self.iven_pos = Player.KEY_ITEM_MAP[pair]
 
 
-        if e.type == SDL_MOUSEBUTTONDOWN:
-            self.mouse = True
+        elif e.type == SDL_MOUSEBUTTONDOWN:
             if self.item > 0 and self.anim < 1 and self.fmax == 1:
                 self.delta = (0,0)
                 self.anim = self.item
@@ -201,8 +197,9 @@ class Player:
                     else:
                         self.fidex = 0
                         self.fmax = 5
+
         elif e.type == SDL_MOUSEBUTTONUP:
-            self.mouse = False
+            pass
 
         elif e.type == SDL_MOUSEWHEEL:
             print('mouse wheel')
@@ -216,6 +213,11 @@ class Player:
                     self.iven_pos[0] = 573 + 64 * 11
                 else:
                     self.iven_pos[0] -= 64
+    def set_pause(self):
+        self.anim = 0
+        self.fmax = 1
+        self.fidx = 0
+        self.delta = (0, 0)
 
     def get_bb(self):
         hw = 20
