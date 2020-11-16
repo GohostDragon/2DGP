@@ -5,7 +5,7 @@ from player import Player
 from zombie import Zombie
 import gobj
 
-from background import FixedBackground as Background
+from background import *
 from main_ui import Main_UI
 from game_time import Game_Time
 
@@ -23,14 +23,17 @@ def enter():
     gfw.world.init(['bg', 'zombie', 'player','ui'])
     #Zombie.load_all_images()
 
-    global player
+    global player,bg ,homy
 
     player = Player()
     gfw.world.add(gfw.layer.player, player)
 
     # bg = gobj.ImageObject('town.jpg', (canvas_width // 2, canvas_height // 2))
     # gfw.world.add(gfw.layer.bg, bg)
-    bg = Background('town.png')
+    #bg = Background('town.png')
+    bg = InBackground('home.jpg')
+    bg = FixedBackground('farm.jpg')
+    #bg = gfw.image.load(gobj.RES_DIR + '/map/home.jpg')
 
     player.bg = bg
     # bg.set_fixed_pos(100, 100)
@@ -50,6 +53,8 @@ def enter():
     global zombie_time
     zombie_time = 1
 
+    homy = gfw.image.load(gobj.RES_DIR + '/hoeDirt.png')
+
 def load():
     if not os.path.isfile(SAVE_FILENAME):
         return False
@@ -62,7 +67,25 @@ def update():
     gfw.world.update()
 
 def draw():
+    global bg,homy
     gfw.world.draw()
+
+    hompos = bg.to_screen(((68 * 10 + 68 * (10 + 1)) // 2, (82 * (10) + 82 * (10 + 1)) // 2))
+    #homy.clip_draw(32,64-32,16,16, *hompos,68,82)
+
+    hompos = bg.to_screen(((68 * 10 + 68 * (10 + 1)) // 2, (82 * (12) + 82 * (12 + 1)) // 2))
+    hompos2 = bg.to_screen(((68 * 10 + 68 * (10 + 1)) // 2, (82 * (11) + 82 * (11 + 1)) // 2))
+    hompos3 = bg.to_screen(((68 * 10 + 68 * (10 + 1)) // 2, (82 * (10) + 82 * (10 + 1)) // 2))
+    hompos4 = bg.to_screen(((68 * 10 + 68 * (10 + 1)) // 2, (82 * (9) + 82 * (9 + 1)) // 2))
+    homy.clip_draw(0, 64 - 16, 16, 16, *hompos, 68, 82)
+    homy.clip_draw(0, 64 - 32, 16, 16, *hompos2, 68, 82)
+    homy.clip_draw(0, 64 - 48, 16, 16, *hompos3, 68, 82)
+    homy.clip_draw(0, 64 - 64, 16, 16, *hompos4, 68, 82)
+    for y in range(65):
+        for x in range(80):
+            minrec = bg.to_screen((68 * x, 82* (y)))
+            maxrec = bg.to_screen((68 * (x+1), 82* (y+1)))
+            draw_rectangle(*minrec,*maxrec)
     # gobj.draw_collision_box()
     
 def handle_event(e):

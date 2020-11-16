@@ -2,10 +2,34 @@ import gfw
 from pico2d import *
 from gobj import *
 
+class InBackground:
+    def __init__(self, imageName):
+        self.imageName = imageName
+        self.image = gfw.image.load(RES_DIR + '/map/' + imageName)
+        self.cw, self.ch = get_canvas_width(), get_canvas_height()
+        self.win_rect = 0, 0, self.cw, self.ch
+
+    def draw(self):
+        self.image.draw(self.cw/2,self.ch/2)
+        #self.image.clip_draw_to_origin(*self.win_rect, 0, 0)
+
+    def update(self):
+        pass
+
+    def translate(self, point):
+        x, y = point
+        l, b, r, t = self.win_rect
+        return l + x, b + y
+    def to_screen(self, point):
+        # return self.cw // 2, self.ch // 2
+        x, y = point
+        l, b, r, t = self.win_rect
+        return x - l, y - b
+
 class Background:
     def __init__(self, imageName):
         self.imageName = imageName
-        self.image = gfw.image.load(res(imageName))
+        self.image = gfw.image.load(RES_DIR + '/map/' + imageName)
         self.target = None
         self.cw, self.ch = get_canvas_width(), get_canvas_height()
         self.win_rect = 0, 0, self.cw, self.ch

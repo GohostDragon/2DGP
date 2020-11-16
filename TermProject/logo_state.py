@@ -2,6 +2,7 @@ import gfw
 from pico2d import *
 import main_state
 import gobj
+import random
 
 canvas_width = main_state.canvas_width
 canvas_height = main_state.canvas_height
@@ -14,16 +15,50 @@ timer = 0
 
 scale = 3
 
+cloudMax = 30
+
+class Cloud:
+    def __init__(self, x, y, type):
+        self.x = x
+        self.y = y
+        self.type = type
+        self.image = gfw.image.load(gobj.RES_DIR + '/logo/Clouds.png')
+        if type == 0:
+            self.sx = 0
+            self.sy = 696 - 540
+            self.width = 151
+            self.heigt = 71
+            self.speed = 2
+        elif type == 1:
+            self.sx = 151
+            self.sy = 696 - 502
+            self.width = 125
+            self.heigt = 64
+            self.speed = 3
+        elif type == 2:
+            self.sx = 408
+            self.sy = 696 - 504
+            self.width = 69
+            self.heigt = 40
+            self.speed = 4
+
+    def draw(self):
+        self.image.clip_draw(self.sx, self.sy, self.width, self.heigt, self.x, center_y + self.y + 440 - clip_sy, self.width * scale, self.heigt * scale)
+
+    def update(self):
+        self.x -= self.speed
+        if (self.x < -100):
+            self.x = canvas_width + 100
+
 def enter():
-    global back, logo, game_start, game_exit, cloud, cx
+    global back, logo, game_start, game_exit, cloud, cx, cloud, cloudMax
     back = gfw.image.load(gobj.RES_DIR +'/logo/Stardew-Valley-Wallpaper-Wallpaper.jpg')
     logo = gfw.image.load(gobj.RES_DIR +'/logo/TitleButtons.ko-KR.png')
 
     cx = canvas_width + 100
     cloud = []
-    cloud.append(gfw.image.load(gobj.RES_DIR +'/logo/Clouds.png'))
-    cloud.append(gfw.image.load(gobj.RES_DIR + '/logo/Clouds.png'))
-    cloud.append(gfw.image.load(gobj.RES_DIR + '/logo/Clouds.png'))
+    for i in range(cloudMax):
+        cloud.append(Cloud(random.randint(canvas_width/2,canvas_width),-400+ random.randint(0,800),random.randint(0,2)))
 
     game_start = gfw.image.load(gobj.RES_DIR +'/logo/TitleButtons.ko-KR.png')
     game_exit = gfw.image.load(gobj.RES_DIR +'/logo/TitleButtons.ko-KR.png')
@@ -39,7 +74,7 @@ def exit():
 
 
 def update():
-    global clip_sy, icon, timer,cx
+    global clip_sy, icon, timer,cx, cloud , cloudMax
     if clip_sy < 1440-1000:
         clip_sy += 3
     else:
@@ -52,18 +87,16 @@ def update():
         icon[1] = True
 
     timer += 1
-    cx -= 3
-    if(cx < -100):
-        cx = canvas_width + 100
+
+    for i in range(cloudMax):
+        cloud[i].update()
 
 def draw():
-    global icon, scale
+    global icon, scale, cloudMax
     #back.draw(center_x, center_y)
     back.clip_draw(0,clip_sy,2560,1000,center_x, center_y,canvas_width,canvas_height)
-
-    cloud[0].clip_draw(0,696-540,151,71,cx, center_y-100  + 440 - clip_sy,151*scale,71*scale)
-    cloud[1].clip_draw(151, 696 - 502, 125, 64, cx, center_y + 150 + 440 - clip_sy, 125 * scale, 64 * scale)
-    cloud[2].clip_draw(408, 696 - 504, 69, 40, cx, center_y - 400 + 440 - clip_sy, 69 * scale, 40 * scale)
+    for i in range(cloudMax):
+        cloud[i].draw()
 
     logo.clip_draw(0,655-186,400,187,center_x, center_y +200+ 440 - clip_sy,1200,187*scale)
 
