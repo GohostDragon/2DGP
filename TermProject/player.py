@@ -45,8 +45,9 @@ class Player:
         self.speed = 100
         self.image = []
         self.image.append(gfw.image.load(gobj.RES_DIR + '/walk_sheet.png'))
-        self.image.append(gfw.image.load(gobj.RES_DIR + '/ax_sheet.png'))
+        self.image.append(gfw.image.load(gobj.RES_DIR + '/geng_sheet.png'))
         self.image.append(gfw.image.load(gobj.RES_DIR + '/gok_sheet.png'))
+        self.image.append(gfw.image.load(gobj.RES_DIR + '/ax_sheet.png'))
         self.image.append(gfw.image.load(gobj.RES_DIR + '/walk_sheet.png'))
         self.image.append(gfw.image.load(gobj.RES_DIR + '/walk_sheet.png'))
 
@@ -71,8 +72,15 @@ class Player:
         self.mirror = False
 
         self.iven_pos = (573,63)
-        self.inven = [1,2,3,4]
-        self.item = 1
+
+        self.inven = [[0] * 13 for i in range(3)]
+
+        self.inven[0][0] = 1
+        self.inven[0][1] = 2
+        self.inven[0][2] = 3
+        self.inven[0][3] = 4
+
+        self.equip = self.inven[0][0]
 
         self.menustate = False
 
@@ -176,22 +184,39 @@ class Player:
 
         elif pair in Player.KEY_ITEM_MAP:
             self.iven_pos = Player.KEY_ITEM_MAP[pair]
+            self.equip = self.inven[0][(self.iven_pos[0]-573) // 64]
 
 
         elif e.type == SDL_MOUSEBUTTONDOWN:
-            if self.item > 0 and self.anim < 1 and self.fmax == 1:
+            if self.equip > 0 and self.anim < 1 and self.fmax == 1:
                 self.delta = (0,0)
-                self.anim = self.item
-                if self.item == 1:
-                    if (self.action == 1):
+                self.anim = self.equip
+                if self.equip == 1:
+                    if self.action == 1:
                         self.fidex = 0
                         self.fmax = 4
                     else:
                         self.fidex = 0
                         self.fmax = 5
 
-                elif self.item == 2:
-                    if (self.action == 0):
+                elif self.equip == 2:
+                    if self.action == 0:
+                        self.fidex = 0
+                        self.fmax = 4
+                    else:
+                        self.fidex = 0
+                        self.fmax = 5
+
+                elif self.equip == 3:
+                    if self.action == 1:
+                        self.fidex = 0
+                        self.fmax = 4
+                    else:
+                        self.fidex = 0
+                        self.fmax = 5
+
+                elif self.equip == 4:
+                    if self.action == 1:
                         self.fidex = 0
                         self.fmax = 4
                     else:

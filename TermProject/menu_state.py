@@ -3,10 +3,11 @@ import gfw
 import gobj
 from menu_ui import Menu_UI
 
+inven = [[0] * 13 for i in range(3)]
 
 def build_world():
     global menu_ui
-    menu_ui = Menu_UI()
+    menu_ui = Menu_UI(inven)
     gfw.world.add(gfw.layer.ui, menu_ui)
 
 
