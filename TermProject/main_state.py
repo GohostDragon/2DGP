@@ -16,8 +16,8 @@ canvas_height = 1080
 
 SAVE_FILENAME = 'zombies.pickle'
 
-FARM_XBOARD = 68
-FARM_YBOARD = 82
+FARM_XBOARD = 80
+FARM_YBOARD = 65
 
 class Map_Tile:
     def __init__(self):
@@ -134,11 +134,15 @@ def handle_event(e):
             player.set_pause()
             start()
 
+    player.handle_event(e)
+
     if e.type == SDL_MOUSEBUTTONDOWN:
         if player.equip == 1:
-            player_xindex = (int)(player.pos[0] // FARM_XBOARD)
-            player_yindex = (int)((player.pos[1]-20) // FARM_YBOARD)
+            player_xindex = (int)(player.pos[0] // 68)
+            player_yindex = (int)((player.pos[1] - 20) // 82)
 
+            print('player pos' + str(player.pos))
+            print('x: '+str(player_xindex) +' y: '+ str(player_yindex))
             if player.action == 0:
                 farmtile[player_yindex+1][player_xindex] = 1
             elif player.action == 1:
@@ -149,13 +153,9 @@ def handle_event(e):
             else:
                 farmtile[player_yindex - 1][player_xindex] = 1
 
-
-    player.handle_event(e)
-
 def resume():
     global player
     player.inven = menu_state.inven
-    print('내가 돌아왔당')
 
 def pause():
     pass

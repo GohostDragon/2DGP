@@ -78,8 +78,6 @@ class Player:
 
         self.equip = self.inven[0][0]
 
-        self.menustate = False
-
     def drawitemrec(self):
         draw_rectangle(*self.iven_pos, self.iven_pos[0] + 65, self.iven_pos[1] + 70)
         draw_rectangle(self.iven_pos[0] - 1, self.iven_pos[1] - 1, self.iven_pos[0] - 1 + 65, self.iven_pos[1] - 1 + 70)
@@ -100,28 +98,19 @@ class Player:
         else:
             self.image[self.anim].clip_draw(sx, sy, width, height, *pos)
 
-        if self.menustate == False:
-            self.ui_image[0].draw(960,100)
-            self.ui_image[1].clip_draw(332, 2256 - 432 - 57, 73, 57, 1760, 950, 73 * 4, 57 * 4)
 
-            for i in range(13):
-                if self.inven[0][i] == 1:
-                    self.item_tool.clip_draw(79, 384 - (64 * 0 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
-                elif self.inven[0][i] == 2:
-                    self.item_tool.clip_draw(79, 384 - (64 * 1 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
-                elif self.inven[0][i] == 3:
-                    self.item_tool.clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
-                elif self.inven[0][i] == 4:
-                    self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
-
-            self.drawitemrec()
-        else:
-            self.ui_menu_image.draw(960, 540)
-
-            self.item_tool[0].clip_draw(79, 384 - (48 + 64 * 0), 17, 17, 604 + 64 * 0, 760, 17 * 4, 17 * 4)
-            self.item_tool[1].clip_draw(79, 384 - (64 * 1 + 48), 17, 17, 604 + 64 * 1, 760, 17 * 4, 17 * 4)
-            self.item_tool[2].clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * 2, 760, 17 * 4, 17 * 4)
-            self.item_tool[3].clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * 3, 760, 17 * 4, 17 * 4)
+        self.ui_image[0].draw(960,100)
+        self.ui_image[1].clip_draw(332, 2256 - 432 - 57, 73, 57, 1760, 950, 73 * 4, 57 * 4)
+        for i in range(13):
+            if self.inven[0][i] == 1:
+                self.item_tool.clip_draw(79, 384 - (64 * 0 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
+            elif self.inven[0][i] == 2:
+                self.item_tool.clip_draw(79, 384 - (64 * 1 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
+            elif self.inven[0][i] == 3:
+                self.item_tool.clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
+            elif self.inven[0][i] == 4:
+                self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
+        self.drawitemrec()
 
     def update(self):
         if self.anim < 1:
