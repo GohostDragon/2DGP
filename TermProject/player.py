@@ -57,11 +57,7 @@ class Player:
 
         self.ui_menu_image = gfw.image.load(gobj.RES_DIR + '/menustate_ui1.png')
 
-        self.item_tool = []
-        self.item_tool.append(gfw.image.load(gobj.RES_DIR + '/tools.png'))
-        self.item_tool.append(gfw.image.load(gobj.RES_DIR + '/tools.png'))
-        self.item_tool.append(gfw.image.load(gobj.RES_DIR + '/tools.png'))
-        self.item_tool.append(gfw.image.load(gobj.RES_DIR + '/tools.png'))
+        self.item_tool= gfw.image.load(gobj.RES_DIR + '/tools.png')
 
         self.anim = 0
         self.time = 0
@@ -108,10 +104,15 @@ class Player:
             self.ui_image[0].draw(960,100)
             self.ui_image[1].clip_draw(332, 2256 - 432 - 57, 73, 57, 1760, 950, 73 * 4, 57 * 4)
 
-            self.item_tool[0].clip_draw(79, 384 - (64 * 0 + 48), 17, 17, 604 + 64 * 0, 100, 17 * 4, 17 * 4)
-            self.item_tool[1].clip_draw(79, 384 - (64 * 1 + 48), 17, 17, 604 + 64 * 1, 100, 17 * 4, 17 * 4)
-            self.item_tool[2].clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * 2, 100, 17 * 4, 17 * 4)
-            self.item_tool[3].clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * 3, 100, 17 * 4, 17 * 4)
+            for i in range(13):
+                if self.inven[0][i] == 1:
+                    self.item_tool.clip_draw(79, 384 - (64 * 0 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
+                elif self.inven[0][i] == 2:
+                    self.item_tool.clip_draw(79, 384 - (64 * 1 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
+                elif self.inven[0][i] == 3:
+                    self.item_tool.clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
+                elif self.inven[0][i] == 4:
+                    self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
 
             self.drawitemrec()
         else:
@@ -190,6 +191,7 @@ class Player:
         elif e.type == SDL_MOUSEBUTTONDOWN:
             if self.equip > 0 and self.anim < 1 and self.fmax == 1:
                 self.delta = (0,0)
+                self.equip = self.inven[0][(self.iven_pos[0] - 573) // 64]
                 self.anim = self.equip
                 if self.equip == 1:
                     if self.action == 1:

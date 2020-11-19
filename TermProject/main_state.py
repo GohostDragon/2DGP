@@ -153,7 +153,9 @@ def handle_event(e):
     player.handle_event(e)
 
 def resume():
-    pass
+    global player
+    player.inven = menu_state.inven
+    print('내가 돌아왔당')
 
 def pause():
     pass

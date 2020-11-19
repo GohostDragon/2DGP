@@ -31,6 +31,8 @@ def handle_event(e):
         if e.key == SDLK_ESCAPE or e.key == SDLK_e:
             return gfw.pop()
 
+    menu_ui.handle_event(e)
+
 
 def handle_mouse(e):
     global capture
@@ -49,10 +51,10 @@ def handle_mouse(e):
 
 
 def exit():
-    global menu_ui
+    global menu_ui, inven
     gfw.world.remove(menu_ui)
+    inven = menu_ui.inven
     print("menu_state exits")
-    pass
 
 
 def pause():
