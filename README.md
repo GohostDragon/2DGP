@@ -104,3 +104,70 @@
 
 - 머리카락이 이런 파일로 존재할 때 플레이가 원하는 색깔을 지정하면 그 색깔에 맞게 머리카락 색을 바꿔주는 스킬을 알고 싶습니다. 스킬 이름을 몰라 이렇게 예시로 설명했습니다.
 - 예시로 머리카락을 들었지만 플레이어 피부색, 옷 색 뿐만 아니라 자동차 색들 다양한 방면에 사용할 수 있을 거 같아 꼭 배우고 싶습니다.
+
+## 2차 발표
+2차 발표 내용입니다.
+## 변경된 내역
+
+**게임 이름 변경**
+
+![enter image description here](https://i.esdrop.com/d/3Hp44sc4OT.PNG)
+
+게임 이름을 시화타운에서 스타듀밸리로 바꾸었습니다.
+기존 게임 그대로 사용하는 것이 더 좋다고 생각하여 바꾸었습니다.
+
+**게임 스테이트 변경**
+
+![enter image description here](https://i.esdrop.com/d/AqJ9sVCBxj.PNG)
+
+-Logo State가 Start State역할과 Title State 역할을 합친 스테이트로 설정
+-Logo State에서 게임을 진행하기로 한다면 Loading State를 통해 게임 데이터 로드하는 과정을 거치고 로딩이 완료되면 Main State로 넘어감
+
+## 진행도
+**주차별 커밋수와 진행상황**
+
+![enter image description here](https://i.esdrop.com/d/pn5jCylr77.PNG)
+
+
+**Logo State**
+
+![enter image description here](https://i.esdrop.com/d/SPWB6EITtA.PNG)
+
+**Loading State**
+
+![enter image description here](https://i.esdrop.com/d/0MlxhoWMHM.PNG)
+
+
+**Main State**
+
+![enter image description here](https://i.esdrop.com/d/l9eSGkgFDw.PNG)
+
+**Map Editor**
+
+![enter image description here](https://i.esdrop.com/d/X6tDNALhVn.PNG)
+
+**Menu State**
+
+![enter image description here](https://i.esdrop.com/d/blPpVRQ6iX.PNG)
+
+## Git Hub Commit
+
+![enter image description here](https://i.esdrop.com/d/IifTtfvC5p.PNG)
+
+![enter image description here](https://i.esdrop.com/d/v0Ck5255NE.PNG)
+
+## Main State Class
+
+![enter image description here](https://i.esdrop.com/d/7x8qEM6s7Q.PNG)
+
+![enter image description here](https://i.esdrop.com/d/Oczy7eqUs5.PNG)
+
+
+![enter image description here](https://i.esdrop.com/d/5aTmitANGI.PNG)
+
+
+![enter image description here](https://i.esdrop.com/d/ifGEHGaGDg.PNG)
+
+![enter image description here](https://i.esdrop.com/d/UXb0OajiUt.PNG)
+
+![enter image description here](https://i.esdrop.com/d/C32VWWF7hd.PNG)
