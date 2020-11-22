@@ -11,7 +11,7 @@ center_y = canvas_height // 2
 
 def enter():
     global back, bg, fg, index, file
-    back = gfw.image.load(res('loading_1280x960.png'))
+    back = gfw.image.load(res('/logo/loading.jpg'))
     bg = gfw.image.load(res('progress_bg.png'))
     fg = gfw.image.load(res('progress_fg.png'))
     index = 0
@@ -62,7 +62,7 @@ def draw():
 
     global display
     font.draw(300, 250, display)
-    font.draw(300, 350, '%.1f%%' % (progress * 100))
+    font.draw(50, 40, 'Loading(%.f%%)' % (progress * 100), (0, 0, 0))
 
 def draw_progress(x, y, width, rate):
     l = x - width // 2
@@ -93,6 +93,9 @@ IMAGE_FILES = [
     "res/gok_sheet.png",
     "res/mainstate_item_ui.png",
     "res/Cursors.ko-KR.png",
+    "res/map/farm.jpg",
+    "res/map/town.jpg",
+    "res/map/home.jpg",
 ]
 
 FONT_PAIRS = [

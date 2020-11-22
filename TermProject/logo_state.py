@@ -3,6 +3,7 @@ from pico2d import *
 import main_state
 import gobj
 import random
+import loading_state
 
 canvas_width = main_state.canvas_width
 canvas_height = main_state.canvas_height
@@ -102,17 +103,34 @@ def draw():
 
     if icon[0] == True:
         game_start.clip_draw(0, 655 - 245, 74, 58, center_x - 300, 59*3, 74*scale, 59*scale)
+        if center_x - 300 - 74*scale//2 < mouse_pos[0] < center_x - 300 - 74*scale//2 + 74*scale and 59*3 - 59*scale//2 < mouse_pos[1] < 59*3 - 59*scale//2 + 59*scale:
+            game_start.clip_draw(0, 655 - 303, 74, 58, center_x - 300, 59 * 3, 74 * scale, 59 * scale)
     if icon[1] == True:
         game_exit.clip_draw(222, 655 - 245, 74, 58, center_x + 300, 59*3, 74*scale, 59*scale)
+        if center_x + 300 - 74*scale//2 < mouse_pos[0] < center_x + 300 - 74*scale//2 + 74*scale and 59*3 - 59*scale//2 < mouse_pos[1] < 59*3 - 59*scale//2 + 59*scale:
+            game_start.clip_draw(222, 655 - 303, 74, 58, center_x + 300, 59 * 3, 74 * scale, 59 * scale)
 
 def handle_event(e):
-    global player
+    global player, mouse_pos
     # prev_dx = boy.dx
     if e.type == SDL_QUIT:
         gfw.quit()
     elif e.type == SDL_KEYDOWN:
         if e.key == SDLK_ESCAPE:
             gfw.pop()
+
+    if e.type == SDL_MOUSEMOTION:
+        mouse_pos = (e.x, get_canvas_height() - 1 - e.y)
+
+    elif e.type == SDL_MOUSEBUTTONDOWN:
+        mouse_pos = (e.x, get_canvas_height() - 1 - e.y)
+        if center_x - 300 - 74 * scale // 2 < mouse_pos[
+            0] < center_x - 300 - 74 * scale // 2 + 74 * scale and 59 * 3 - 59 * scale // 2 < mouse_pos[
+            1] < 59 * 3 - 59 * scale // 2 + 59 * scale:
+            gfw.change(loading_state)
+            return
+        elif center_x + 300 - 74*scale//2 < mouse_pos[0] < center_x + 300 - 74*scale//2 + 74*scale and 59*3 - 59*scale//2 < mouse_pos[1] < 59*3 - 59*scale//2 + 59*scale:
+            gfw.quit()
 
 IMAGE_FILES = [
     "res/kpu_1280x960.png",
