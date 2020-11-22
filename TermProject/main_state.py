@@ -58,8 +58,9 @@ def enter():
     # bg = gobj.ImageObject('town.jpg', (canvas_width // 2, canvas_height // 2))
     # gfw.world.add(gfw.layer.bg, bg)
     #bg = Background('town.png')
-    bg = InBackground('home.jpg')
     bg = FixedBackground('farm.jpg')
+    bg = FixedBackground('town.jpg')
+    #bg = InBackground('home.jpg')
     #bg = gfw.image.load(gobj.RES_DIR + '/map/home.jpg')
 
     player.bg = bg

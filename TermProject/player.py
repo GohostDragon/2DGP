@@ -98,18 +98,24 @@ class Player:
         else:
             self.image[self.anim].clip_draw(sx, sy, width, height, *pos)
 
+        if pos[1] < get_canvas_height() // 2 - 200:
+            invenui_y = 1000
+            self.iven_pos = (573, 963)
+        else:
+            invenui_y = 100
+            self.iven_pos = (573, 63)
 
-        self.ui_image[0].draw(960,100)
+        self.ui_image[0].draw(960,invenui_y)
         self.ui_image[1].clip_draw(332, 2256 - 432 - 57, 73, 57, 1760, 950, 73 * 4, 57 * 4)
         for i in range(13):
             if self.inven[0][i] == 1:
-                self.item_tool.clip_draw(79, 384 - (64 * 0 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
+                self.item_tool.clip_draw(79, 384 - (64 * 0 + 48), 17, 17, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
             elif self.inven[0][i] == 2:
-                self.item_tool.clip_draw(79, 384 - (64 * 1 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
+                self.item_tool.clip_draw(79, 384 - (64 * 1 + 48), 17, 17, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
             elif self.inven[0][i] == 3:
-                self.item_tool.clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
+                self.item_tool.clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
             elif self.inven[0][i] == 4:
-                self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * i, 100, 17 * 4, 17 * 4)
+                self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
         self.drawitemrec()
 
     def update(self):
