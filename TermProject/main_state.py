@@ -10,6 +10,7 @@ from main_ui import Main_UI
 from game_time import Game_Time
 
 import menu_state
+import pickle
 
 canvas_width = 1920
 canvas_height = 1080
@@ -36,6 +37,10 @@ class Map_Tile:
     def update(self):
         pass
 
+class Tile:
+    def __init__(self):
+        self.tile = 0
+        self.col = True
 
 def start():
     menu_state.inven = player.inven
@@ -45,12 +50,32 @@ def enter():
     gfw.world.init(['bg','tile', 'zombie', 'player','ui'])
     #Zombie.load_all_images()
 
-    global player,bg ,homy, farmtile, tile
+    global player,bg ,homy, farmtile, tile, coltile
 
     farmtile = [[0] * FARM_XBOARD for i in range(FARM_YBOARD)]
 
+    coltile = []
+    for y in range(FARM_YBOARD):
+        coltile.append([])
+        for x in range(FARM_XBOARD):
+            coltile[y].append(Tile())
+
+    '''
+    try:
+        f = open('Home_Tile.pickle', "rb")
+        coltile = pickle.load(f)
+        f.close()
+    except:
+        print("No highscore file")
+    '''
+
+    f = open('Home_Tile.pickle', "rb")
+    coltile = pickle.load(f)
+    f.close()
+
     player = Player()
     gfw.world.add(gfw.layer.player, player)
+    player.coltile = coltile
 
     tile = Map_Tile()
     gfw.world.add(gfw.layer.tile, tile)
@@ -60,7 +85,7 @@ def enter():
     #bg = Background('town.png')
     bg = FixedBackground('farm.jpg')
     bg = FixedBackground('town.jpg')
-    #bg = InBackground('home.jpg')
+    bg = InBackground('home.jpg')
     #bg = gfw.image.load(gobj.RES_DIR + '/map/home.jpg')
 
     player.bg = bg
@@ -97,23 +122,6 @@ def update():
 def draw():
     global bg,homy
     gfw.world.draw()
-
-    hompos = bg.to_screen(((68 * 10 + 68 * (10 + 1)) // 2, (82 * (10) + 82 * (10 + 1)) // 2))
-    #homy.clip_draw(32,64-32,16,16, *hompos,68,82)
-
-    #hompos = bg.to_screen(((68 * 10 + 68 * (10 + 1)) // 2, (82 * (12) + 82 * (12 + 1)) // 2))
-    hompos2 = bg.to_screen(((68 * 10 + 68 * (10 + 1)) // 2, (82 * (11) + 82 * (11 + 1)) // 2))
-    hompos3 = bg.to_screen(((68 * 10 + 68 * (10 + 1)) // 2, (82 * (10) + 82 * (10 + 1)) // 2))
-    hompos4 = bg.to_screen(((68 * 10 + 68 * (10 + 1)) // 2, (82 * (9) + 82 * (9 + 1)) // 2))
-    #homy.clip_draw(0, 64 - 16, 16, 16, *hompos, 68, 82)
-    homy.clip_draw(0, 64 - 32, 16, 16, *hompos2, 68, 82)
-    homy.clip_draw(0, 64 - 48, 16, 16, *hompos3, 68, 82)
-    homy.clip_draw(0, 64 - 64, 16, 16, *hompos4, 68, 82)
-
-    hompos = bg.to_screen((68*11, 82*12))
-
-    homy.clip_draw_to_origin(0, 64 - 16, 16, 16, *hompos,68,82)
-
 
     for y in range(FARM_YBOARD):
         for x in range(FARM_XBOARD):

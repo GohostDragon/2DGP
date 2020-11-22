@@ -9,6 +9,11 @@ canvas_height = main_state.canvas_height
 center_x = canvas_width // 2
 center_y = canvas_height // 2
 
+class Tile:
+    def __init__(self):
+        self.tile = 0
+        self.col = True
+
 def enter():
     global back, bg, fg, index, file
     back = gfw.image.load(res('/logo/loading.jpg'))

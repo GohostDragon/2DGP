@@ -3,6 +3,10 @@ from pico2d import *
 import gfw
 import gobj
 
+class Col_Tile:
+    def __init__(self):
+        self.tile = 0
+        self.col = True
 
 class Player:
     KEY_MAP = {
@@ -77,6 +81,7 @@ class Player:
         self.inven[0][3] = 4
 
         self.equip = self.inven[0][0]
+        self.coltile = []
 
     def drawitemrec(self):
         draw_rectangle(*self.iven_pos, self.iven_pos[0] + 65, self.iven_pos[1] + 70)
@@ -117,6 +122,7 @@ class Player:
             elif self.inven[0][i] == 4:
                 self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
         self.drawitemrec()
+        draw_rectangle(self.pos[0] - 30,self.pos[1] - 65, self.pos[0] + 30, self.pos[1] + 65)
 
     def update(self):
         if self.anim < 1:
@@ -124,6 +130,18 @@ class Player:
             dx,dy = self.delta
             x += dx * self.speed * self.mag * gfw.delta_time
             y += dy * self.speed * self.mag * gfw.delta_time
+
+            pmin = (x - 30, y -65)
+            pmax = (x + 30, y + 65)
+
+            for cy in range(65):
+                for cx in range(80):
+                    if self.coltile[cy][cx].col == False:
+                        colmin = (68*cx, 82*cy)
+                        colmax = (68*(cx+1), 82*(cy+1))
+                        if pmin[0] < colmax[0] and colmin[0] < pmax[0]:
+                            if pmin[1] < colmax[1] and colmin[1] < pmin[1]:
+                                x,y = self.pos
 
             self.pos = x,y
 
