@@ -60,19 +60,19 @@ def enter():
         for x in range(FARM_XBOARD):
             coltile[y].append(Tile())
 
-    '''
+
     try:
         f = open('Home_Tile.pickle', "rb")
         coltile = pickle.load(f)
         f.close()
     except:
-        print("No highscore file")
+        print("No Map file")
+    
     '''
-
     f = open('Home_Tile.pickle', "rb")
     coltile = pickle.load(f)
     f.close()
-
+    '''
     player = Player()
     gfw.world.add(gfw.layer.player, player)
     player.coltile = coltile
@@ -88,13 +88,14 @@ def enter():
     bg = InBackground('home.jpg')
     #bg = gfw.image.load(gobj.RES_DIR + '/map/home.jpg')
 
+    bg = FixedBackground('town.jpg')
+    bg = InBackground('home.jpg')
+    bg = InBackground('shop.jpg')
     player.bg = bg
-    # bg.set_fixed_pos(100, 100)
     gfw.world.add(gfw.layer.bg, bg)
     bg.target = player
 
     global main_ui
-    #main_ui = Main_UI(canvas_width - 65, canvas_height - 230)
     main_ui = Main_UI(canvas_width - 40, canvas_height - 230)
     main_ui.money = 500
     gfw.world.add(gfw.layer.ui, main_ui)

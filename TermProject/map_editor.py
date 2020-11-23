@@ -19,7 +19,7 @@ center_y = canvas_height // 2
 FARM_XBOARD = 80
 FARM_YBOARD = 65
 
-FILE_NAME = 'Home_Tile.pickle'
+FILE_NAME = 'Farm_Tile.pickle'
 
 class Player:
     KEY_MAP = {
@@ -96,7 +96,7 @@ def enter():
     gfw.world.add(gfw.layer.player, player)
 
     bg = InBackground('home.jpg')
-    #bg = FixedBackground('farm.jpg')
+    bg = FixedBackground('farm.jpg')
     # bg = gfw.image.load(gobj.RES_DIR + '/map/home.jpg')
 
     player.bg = bg
@@ -127,9 +127,13 @@ def draw():
     for y in range(FARM_YBOARD):
         for x in range(FARM_XBOARD):
             if data_tile[y][x].tile != 0:
+                pos = bg.to_screen((68 * x, 82 * y))
                 if data_tile[y][x].tile == 1:
-                    pos = bg.to_screen((68 * x, 82 * y))
                     tile_object.clip_draw_to_origin(16 * 3, 16 * 5, 16, 16, *pos, 68, 82)
+                elif data_tile[y][x].tile == 2:
+                    tile_object.clip_draw_to_origin(16 * 7, 16 * 19, 16, 16, *pos, 68, 82)
+                elif data_tile[y][x].tile == 3:
+                    tile_object.clip_draw_to_origin(16 * 7, 16 * 21, 16, 16, *pos, 68, 82)
             else:
                 if data_tile[y][x].col == False:
                     pos = bg.to_screen((68*x,82*y))
@@ -150,7 +154,7 @@ def handle_event(e):
 
         elif e.key == SDLK_a:
             set_tile += 1
-            if set_tile > 1:
+            if set_tile > 3:
                 set_tile = 0
 
         if e.key == SDLK_ESCAPE:

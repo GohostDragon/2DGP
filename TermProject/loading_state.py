@@ -63,7 +63,7 @@ def draw():
     image_count = len(IMAGE_FILES)
     font_count = len(FONT_PAIRS)
     progress = index / (image_count + font_count)
-    draw_progress(center_x, 300, 680, progress)
+    #draw_progress(center_x, 300, 680, progress)
 
     global display
     font.draw(300, 250, display)
@@ -101,6 +101,7 @@ IMAGE_FILES = [
     "res/map/farm.jpg",
     "res/map/town.jpg",
     "res/map/home.jpg",
+    "res/map/shop.jpg",
 ]
 
 FONT_PAIRS = [
