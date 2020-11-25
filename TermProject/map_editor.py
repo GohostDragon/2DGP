@@ -67,10 +67,37 @@ class Player:
         elif pair == Player.KEYUP_LSHIFT:
             self.mag //= 2
 
-class Tile:
+class Farm_Object:
     def __init__(self):
         self.tile = 0
-        self.col = True
+        self.col = False
+        self.pos = (0,0)
+        #self.tile_object = gfw.image.load(gobj.RES_DIR + '/object/springobjects.ko-KR.png')
+
+    '''
+    def clearobject(self):
+        self.tile = 0
+        self.col = False
+
+    def setbg(self, bg):
+        self.bg = bg
+    
+    def draw(self):
+        if self.tile == 1:
+            self.tile_object.clip_draw_to_origin(16 * 3, 16 * 5, 16, 16, self.pos[0], self.pos[1], 68, 82)
+        elif self.tile == 2:
+            self.tile_object.clip_draw_to_origin(16 * 7, 16 * 19, 16, 16, self.pos[0], self.pos[1], 68, 82)
+        elif self.tile == 3:
+            self.tile_object.clip_draw_to_origin(16 * 7, 16 * 21, 16, 16, self.pos[0], self.pos[1], 68, 82)
+
+    def get_bb(self):
+        hw = 68 // 2
+        hh = 82 // 2
+        return self.x - hw, self.y - hh, self.x + hw, self.y + hh
+
+    def update(self):
+        pass
+    '''
 
 def enter():
     gfw.world.init(['bg', 'tile', 'zombie', 'player', 'ui'])
@@ -81,7 +108,7 @@ def enter():
     for y in range(FARM_YBOARD):
         data_tile.append([])
         for x in range(FARM_XBOARD):
-            data_tile[y].append(Tile())
+            data_tile[y].append(Farm_Object())
 
     try:
         f = open(FILE_NAME, "rb")
@@ -135,7 +162,7 @@ def draw():
                 elif data_tile[y][x].tile == 3:
                     tile_object.clip_draw_to_origin(16 * 7, 16 * 21, 16, 16, *pos, 68, 82)
             else:
-                if data_tile[y][x].col == False:
+                if data_tile[y][x].col == True:
                     pos = bg.to_screen((68*x,82*y))
                     xicon.draw_to_origin(*pos,68,82)
 
@@ -168,10 +195,12 @@ def handle_event(e):
         player_yindex = (int)(mouse_pos[1] // 82)
         if e.button == SDL_BUTTON_LEFT:
             data_tile[player_yindex][player_xindex].tile = set_tile
-            data_tile[player_yindex][player_xindex].col = False
+            data_tile[player_yindex][player_xindex].pos = (player_xindex, player_yindex)
+            data_tile[player_yindex][player_xindex].col = True
         elif e.button == SDL_BUTTON_RIGHT:
             data_tile[player_yindex][player_xindex].tile = 0
-            data_tile[player_yindex][player_xindex].col = True
+            data_tile[player_yindex][player_xindex].pos = (0,0)
+            data_tile[player_yindex][player_xindex].col = False
 
 if __name__ == '__main__':
     gfw.run_main()

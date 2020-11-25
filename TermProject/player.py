@@ -81,7 +81,7 @@ class Player:
         self.inven[0][3] = 4
 
         self.equip = self.inven[0][0]
-        self.coltile = []
+        self.farm_objects = []
 
     def drawitemrec(self):
         draw_rectangle(*self.iven_pos, self.iven_pos[0] + 65, self.iven_pos[1] + 70)
@@ -122,26 +122,54 @@ class Player:
             elif self.inven[0][i] == 4:
                 self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
         self.drawitemrec()
-        draw_rectangle(self.pos[0] - 30,self.pos[1] - 65, self.pos[0] + 30, self.pos[1] + 65)
+        draw_rectangle(pos[0] - 30,pos[1] - 65, pos[0] + 30, pos[1] + 65)
+
+    def get_bb(self):
+        #pos = self.bg.to_screen(self.pos)
+        return self.dpos[0] - 30, self.dpos[1] - 65, self.dpos[0] + 30, self.dpos[1] + 65
 
     def update(self):
         if self.anim < 1:
-            x,y = self.pos
+            x, y = self.pos
             dx,dy = self.delta
             x += dx * self.speed * self.mag * gfw.delta_time
             y += dy * self.speed * self.mag * gfw.delta_time
 
-            pmin = (x - 30, y -65)
-            pmax = (x + 30, y + 65)
+            self.dpos = self.bg.to_screen((x,y))
 
             for cy in range(65):
                 for cx in range(80):
-                    if self.coltile[cy][cx].col == False:
-                        colmin = (68*cx, 82*cy)
-                        colmax = (68*(cx+1), 82*(cy+1))
+                    if self.farm_objects[cy][cx].col == True:
+                        if gobj.collides_box(self,self.farm_objects[cy][cx]):
+                            x, y = self.pos
+            '''
+            for cy in range(65):
+                for cx in range(80):
+                    if self.farm_objects[cy][cx].col == False:
+                        colmin = self.bg.to_screen((68*cx, 82*cy))
+                        colmax = self.bg.to_screen((68*(cx+1), 82*(cy+1)))
                         if pmin[0] < colmax[0] and colmin[0] < pmax[0]:
                             if pmin[1] < colmax[1] and colmin[1] < pmin[1]:
-                                x,y = self.pos
+                                pass
+                                
+                                if pmax[0] > colmin[0]:
+                                    back_x = (pmax[0] - colmin[0])
+                                elif pmin[0] < colmax[0]:
+                                    back_x = (colmax[0] - pmin[0])
+                                else:
+                                    back_x = 0
+
+                                if pmax[1] > colmin[1]:
+                                    back_y = (pmax[1] - colmin[1])
+                                elif pmin[1] < colmax[1]:
+                                    back_y = (colmax[1] - pmin[1])
+                                else:
+                                    back_y = 0
+
+                                bposx, bposy = self.bg.translate((back_x,back_y))
+                                x -= back_x
+                                y -= back_y
+                                '''
 
             self.pos = x,y
 
@@ -258,12 +286,6 @@ class Player:
         self.fmax = 1
         self.fidx = 0
         self.delta = (0, 0)
-
-    def get_bb(self):
-        hw = 20
-        hh = 40
-        x,y = self.pos
-        return x - hw, y - hh, x + hw, y + hh
 
     def __getstate__(self):
         dict = self.__dict__.copy()

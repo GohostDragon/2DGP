@@ -37,45 +37,53 @@ class Map_Tile:
     def update(self):
         pass
 
-class Tile:
+class Farm_Object:
     def __init__(self):
         self.tile = 0
-        self.col = True
+        self.col = False
+        self.pos = (0,0)
+
+class Farm_Manage_Object:
+    def __init__(self,obj,bg):
+        self.tile = obj.tile
+        self.col = obj.col
+        self.pos = obj.pos
+        self.bg = bg
+        self.tile_object = gfw.image.load(gobj.RES_DIR + '/object/springobjects.ko-KR.png')
+
+    def deleteobject(self):
+        self.tile = 0
+        self.col = False
+
+    def draw(self):
+        if self.tile == 1:
+            self.tile_object.clip_draw_to_origin(16 * 3, 16 * 5, 16, 16, *self.bgpos, 68, 82)
+        elif self.tile == 2:
+            self.tile_object.clip_draw_to_origin(16 * 7, 16 * 19, 16, 16, *self.bgpos, 68, 82)
+        elif self.tile == 3:
+            self.tile_object.clip_draw_to_origin(16 * 7, 16 * 21, 16, 16, *self.bgpos, 68, 82)
+
+    def get_bb(self):
+        return self.bgpos[0], self.bgpos[1], self.bgpos[0] + 68, self.bgpos[1] + 82
+
+    def update(self):
+        self.bgpos = bg.to_screen((68 * self.pos[0], 82 * self.pos[1]))
 
 def start():
     menu_state.inven = player.inven
     gfw.push(menu_state)
 
 def enter():
-    gfw.world.init(['bg','tile', 'zombie', 'player','ui'])
+    gfw.world.init(['bg','tile', 'object', 'player','ui'])
     #Zombie.load_all_images()
 
-    global player,bg ,homy, farmtile, tile, coltile
+    global player,bg ,homy, farmtile, tile, coltile, tile_object
 
     farmtile = [[0] * FARM_XBOARD for i in range(FARM_YBOARD)]
 
-    coltile = []
-    for y in range(FARM_YBOARD):
-        coltile.append([])
-        for x in range(FARM_XBOARD):
-            coltile[y].append(Tile())
-
-
-    try:
-        f = open('Home_Tile.pickle', "rb")
-        coltile = pickle.load(f)
-        f.close()
-    except:
-        print("No Map file")
-    
-    '''
-    f = open('Home_Tile.pickle', "rb")
-    coltile = pickle.load(f)
-    f.close()
-    '''
     player = Player()
     gfw.world.add(gfw.layer.player, player)
-    player.coltile = coltile
+    #player.coltile = coltile
 
     tile = Map_Tile()
     gfw.world.add(gfw.layer.tile, tile)
@@ -86,14 +94,33 @@ def enter():
     bg = FixedBackground('farm.jpg')
     bg = FixedBackground('town.jpg')
     bg = InBackground('home.jpg')
+    bg = InBackground('shop.jpg')
     #bg = gfw.image.load(gobj.RES_DIR + '/map/home.jpg')
 
     bg = FixedBackground('town.jpg')
-    bg = InBackground('home.jpg')
-    bg = InBackground('shop.jpg')
+    bg = FixedBackground('farm.jpg')
     player.bg = bg
     gfw.world.add(gfw.layer.bg, bg)
     bg.target = player
+
+    try:
+        f = open('Farm_Tile.pickle', "rb")
+        data_object = pickle.load(f)
+        f.close()
+    except:
+        print("No Map file")
+
+    farm_objects = []
+    for y in range(FARM_YBOARD):
+        farm_objects.append([])
+        for x in range(FARM_XBOARD):
+            farm_objects[y].append(Farm_Manage_Object(data_object[y][x], bg))
+
+    for y in range(FARM_YBOARD):
+        for x in range(FARM_XBOARD):
+            gfw.world.add(gfw.layer.object, farm_objects[y][x])
+
+    player.farm_objects = farm_objects
 
     global main_ui
     main_ui = Main_UI(canvas_width - 40, canvas_height - 230)
@@ -103,9 +130,6 @@ def enter():
     global game_time
     game_time = Game_Time()
     gfw.world.add(gfw.layer.ui, game_time)
-
-    global zombie_time
-    zombie_time = 1
 
     homy = gfw.image.load(gobj.RES_DIR + '/hoeDirt.png')
 
