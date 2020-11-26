@@ -30,9 +30,11 @@ class Map_Tile:
     def draw(self):
         for y in range(FARM_YBOARD):
             for x in range(FARM_XBOARD):
+                hompos = bg.to_screen((68 * x, 82 * y))
                 if farmtile[y][x] == 1:
-                    hompos = bg.to_screen((68 * x, 82 * y))
                     self.hoedirt.clip_draw_to_origin(0, 64 - 16, 16, 16, *hompos,68,82)
+                elif farmtile[y][x] == 2:
+                    self.hoedirt.clip_draw_to_origin(16*4, 64 - 16, 16, 16, *hompos, 68, 82)
 
     def update(self):
         pass
@@ -50,6 +52,7 @@ class Farm_Manage_Object:
         self.pos = obj.pos
         self.bg = bg
         self.tile_object = gfw.image.load(gobj.RES_DIR + '/object/springobjects.ko-KR.png')
+        self.crop_object = gfw.image.load(gobj.RES_DIR + '/object/crops.png')
 
     def deleteobject(self):
         self.tile = 0
@@ -62,6 +65,8 @@ class Farm_Manage_Object:
             self.tile_object.clip_draw_to_origin(16 * 7, 16 * 19, 16, 16, *self.bgpos, 68, 82)
         elif self.tile == 3:
             self.tile_object.clip_draw_to_origin(16 * 7, 16 * 21, 16, 16, *self.bgpos, 68, 82)
+        elif self.tile == 4:
+            self.crop_object.clip_draw_to_origin(1, 672-33, 16, 16, *self.bgpos, 68, 82)
 
     def get_bb(self):
         return self.bgpos[0], self.bgpos[1], self.bgpos[0] + 68, self.bgpos[1] + 82
@@ -118,6 +123,7 @@ def enter():
 
     for y in range(FARM_YBOARD):
         for x in range(FARM_XBOARD):
+            farm_objects[y][x].pos = (x, y)
             gfw.world.add(gfw.layer.object, farm_objects[y][x])
 
     player.farm_objects = farm_objects
@@ -202,6 +208,24 @@ def handle_event(e):
                 farm_objects[y_tile][x_tile].tile = 0
                 farm_objects[y_tile][x_tile].col = False
 
+        elif player.equip == 4:
+            if farmtile[y_tile][x_tile] == 1:
+                farmtile[y_tile][x_tile] = 2
+
+        elif player.equip == 5:
+            if farm_objects[y_tile][x_tile].tile == 1:
+                farm_objects[y_tile][x_tile].tile = 0
+                farm_objects[y_tile][x_tile].col = False
+
+        elif player.equip == 6:
+            if farmtile[y_tile][x_tile] == 1 or farmtile[y_tile][x_tile] == 2:
+                if farm_objects[y_tile][x_tile].tile == 0:
+                    farm_objects[y_tile][x_tile].tile = 4
+                    farm_objects[y_tile][x_tile].col = False
+                    player.inven[0][(player.iven_pos[0] - 573) // 64].useItem()
+
+        if player.inven[0][(player.iven_pos[0] - 573) // 64].emptyItem():
+            player.equip = 0
         player.farm_objects = farm_objects
 
 def resume():

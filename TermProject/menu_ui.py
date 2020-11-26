@@ -14,6 +14,10 @@ class Menu_UI:
 
         self.item_tool = gfw.image.load(gobj.RES_DIR + '/tools.png')
         self.item_weapon = gfw.image.load(gobj.RES_DIR + '/weapons.png')
+        self.item_image = gfw.image.load(gobj.RES_DIR + '/object/springobjects.ko-KR.png')
+
+        self.font = gfw.font.load(gobj.RES_DIR + '/BMJUA_ttf.ttf', 20)
+
         self.reset()
         self.inven = inven
         self.capture = False
@@ -44,16 +48,21 @@ class Menu_UI:
                     else:
                         posy = 614
 
-                    if self.inven[y][x] == 1:
+                    if self.inven[y][x].item == 1:
                         self.item_tool.clip_draw(79, 384 - (64 * 0 + 48), 17, 17, 604 + 64 * x, posy, 17 * 4, 17 * 4)
-                    elif self.inven[y][x] == 2:
+                    elif self.inven[y][x].item == 2:
                         self.item_tool.clip_draw(79, 384 - (64 * 1 + 48), 17, 17, 604 + 64 * x, posy, 17 * 4, 17 * 4)
-                    elif self.inven[y][x] == 3:
+                    elif self.inven[y][x].item == 3:
                         self.item_tool.clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * x, posy, 17 * 4, 17 * 4)
-                    elif self.inven[y][x] == 4:
+                    elif self.inven[y][x].item == 4:
                         self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * x, posy, 17 * 4, 17 * 4)
-                    elif self.inven[y][x] == 5:
+                    elif self.inven[y][x].item == 5:
                         self.item_weapon.clip_draw(7*16, 16, 16, 16, 604 + 64 * x, posy, 17 * 4, 17 * 4)
+                    elif self.inven[y][x].item == 6:
+                        self.item_image.clip_draw(16 * 16, 16 * 14, 16, 16, 604 + 64 * x, posy, 17 * 3, 17 * 3)
+
+                    if self.inven[y][x].item > 5:
+                        self.font.draw(604 + 64 * x + 10, posy - 25, str(self.inven[y][x].count), (255, 255, 255))
 
             if self.capture:
                 if self.select == 1:
@@ -66,6 +75,8 @@ class Menu_UI:
                     self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, *self.mouse_pos, 17 * 4, 17 * 4)
                 elif self.select == 5:
                     self.item_weapon.clip_draw(7 * 16, 16, 16, 16, *self.mouse_pos, 17 * 4, 17 * 4)
+                elif self.select == 6:
+                    self.item_image.clip_draw(16 * 16, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
 
 
     def handle_event(self, e):
@@ -90,13 +101,13 @@ class Menu_UI:
                                 posy = 614
                             if 570 + x * 17 *4 < self.mouse_pos[0] < 570 + (x+1) * 17 *4 and posy - 34 < self.mouse_pos[1] < posy - 34 + 17 * 4:
                                 self.capture = True
-                                self.select = self.inven[y][x]
-                                self.inven[y][x] = 0
+                                self.select = self.inven[y][x].item
+                                self.inven[y][x].item = 0
                                 self.selectposx = x
                                 self.selectposy = y
 
                 else:
-                    self.inven[self.selectposy][self.selectposx] = self.select
+                    self.inven[self.selectposy][self.selectposx].item = self.select
                     for y in range(3):
                         for x in range(12):
                             if y == 0:

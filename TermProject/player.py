@@ -13,11 +13,16 @@ class Inven:
         self.count = count
 
     def useItem(self):
-        if self.item not in range(1, 6):
+        if self.item not in range(1, 6) and self.count > 0:
             self.count -= 1
 
         if self.count == 0:
             self.item = 0
+
+    def emptyItem(self):
+        if self.count == 0:
+            return True
+        return False
 
 class Player:
     KEY_MAP = {
@@ -78,6 +83,7 @@ class Player:
 
         self.item_tool = gfw.image.load(gobj.RES_DIR + '/tools.png')
         self.weapon_image = gfw.image.load(gobj.RES_DIR + '/weapons.png')
+        self.item_image = gfw.image.load(gobj.RES_DIR + '/object/springobjects.ko-KR.png')
 
         self.state = Player.RUNNING
         self.time = 0
@@ -89,7 +95,7 @@ class Player:
 
         self.iven_pos = (573,63)
 
-        #self.inven = [Inven() * 13 for i in range(3)]
+        self.font = gfw.font.load(gobj.RES_DIR + '/BMJUA_ttf.ttf', 20)
 
         self.inven = []
         for y in range(3):
@@ -99,6 +105,7 @@ class Player:
 
         for i in range(5):
             self.inven[0][i].inputItem(i + 1, 1)
+        self.inven[0][5].inputItem(6, 3)
 
         self.equip = self.inven[0][0].item
         self.farm_objects = []
@@ -145,9 +152,14 @@ class Player:
             elif self.inven[0][i].item == 4:
                 self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
             elif self.inven[0][i].item == 5:
-                self.weapon_image.clip_draw(7*16, 16, 16, 16, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
+                self.weapon_image.clip_draw(7*16, 16, 16, 16, 604 + 64 * i, invenui_y, 17 * 3, 17 * 3)
+            elif self.inven[0][i].item == 6:
+                self.item_image.clip_draw(16*16, 16*14, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
+
+            if self.inven[0][i].item > 5:
+                self.font.draw(604 + 64 * i + 10, invenui_y - 25, str(self.inven[0][i].count), (255, 255, 255))
         self.drawitemrec()
-        draw_rectangle(pos[0] - 30,pos[1] - 65, pos[0] + 30, pos[1])
+        draw_rectangle(pos[0] - 30, pos[1] - 65, pos[0] + 30, pos[1])
 
     def get_bb(self):
         #pos = self.bg.to_screen(self.pos)
