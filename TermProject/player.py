@@ -3,10 +3,21 @@ from pico2d import *
 import gfw
 import gobj
 
-class Col_Tile:
+class Inven:
     def __init__(self):
-        self.tile = 0
-        self.col = True
+        self.item = 0
+        self.count = 0
+
+    def inputItem(self, item, count):
+        self.item = item
+        self.count = count
+
+    def useItem(self):
+        if self.item not in range(1, 6):
+            self.count -= 1
+
+        if self.count == 0:
+            self.item = 0
 
 class Player:
     KEY_MAP = {
@@ -41,9 +52,13 @@ class Player:
     KEYDOWN_E = (SDL_KEYDOWN, SDLK_e)
     image = None
 
+    RUNNING, HOE, PICKAX, AX, POT, NAT = range(6)
     #constructor
     def __init__(self):
-        self.pos = get_canvas_width() // 2, get_canvas_height() // 2
+        #self.pos = get_canvas_width() // 2, get_canvas_height() // 2
+
+        self.pos = (5000,2000)
+
         self.delta = 0, 0
         self.target = None
         self.speed = 100
@@ -52,8 +67,8 @@ class Player:
         self.image.append(gfw.image.load(gobj.RES_DIR + '/geng_sheet.png'))
         self.image.append(gfw.image.load(gobj.RES_DIR + '/gok_sheet.png'))
         self.image.append(gfw.image.load(gobj.RES_DIR + '/ax_sheet.png'))
-        self.image.append(gfw.image.load(gobj.RES_DIR + '/walk_sheet.png'))
-        self.image.append(gfw.image.load(gobj.RES_DIR + '/walk_sheet.png'))
+        self.image.append(gfw.image.load(gobj.RES_DIR + '/mul_sheet.png'))
+        self.image.append(gfw.image.load(gobj.RES_DIR + '/nat_sheet.png'))
 
         self.ui_image = []
         self.ui_image.append(gfw.image.load(gobj.RES_DIR + '/mainstate_item_ui.png'))
@@ -61,9 +76,10 @@ class Player:
 
         self.ui_menu_image = gfw.image.load(gobj.RES_DIR + '/menustate_ui1.png')
 
-        self.item_tool= gfw.image.load(gobj.RES_DIR + '/tools.png')
+        self.item_tool = gfw.image.load(gobj.RES_DIR + '/tools.png')
+        self.weapon_image = gfw.image.load(gobj.RES_DIR + '/weapons.png')
 
-        self.anim = 0
+        self.state = Player.RUNNING
         self.time = 0
         self.fidx = 0
         self.fmax = 1
@@ -73,15 +89,22 @@ class Player:
 
         self.iven_pos = (573,63)
 
-        self.inven = [[0] * 13 for i in range(3)]
+        #self.inven = [Inven() * 13 for i in range(3)]
 
-        self.inven[0][0] = 1
-        self.inven[0][1] = 2
-        self.inven[0][2] = 3
-        self.inven[0][3] = 4
+        self.inven = []
+        for y in range(3):
+            self.inven.append([])
+            for x in range(13):
+                self.inven[y].append(Inven())
 
-        self.equip = self.inven[0][0]
+        for i in range(5):
+            self.inven[0][i].inputItem(i + 1, 1)
+
+        self.equip = self.inven[0][0].item
         self.farm_objects = []
+
+        self.mousecap = False
+        self.keycap = False
 
     def drawitemrec(self):
         draw_rectangle(*self.iven_pos, self.iven_pos[0] + 65, self.iven_pos[1] + 70)
@@ -89,7 +112,7 @@ class Player:
         draw_rectangle(self.iven_pos[0] + 1, self.iven_pos[1] + 1, self.iven_pos[0] + 1 + 65, self.iven_pos[1] + 1 + 70)
 
     def draw(self):
-        if self.anim < 1:
+        if self.state == Player.RUNNING:
             width,height = 70,130
         else:
             width, height = 250, 300
@@ -99,37 +122,39 @@ class Player:
 
         pos = self.bg.to_screen(self.pos)
         if self.mirror == True:
-            self.image[self.anim].clip_composite_draw(sx, sy, width, height,0,'h', *pos,width,height)
+            self.image[self.state].clip_composite_draw(sx, sy, width, height,0,'h', *pos,width,height)
         else:
-            self.image[self.anim].clip_draw(sx, sy, width, height, *pos)
+            self.image[self.state].clip_draw(sx, sy, width, height, *pos)
 
         if pos[1] < get_canvas_height() // 2 - 200:
             invenui_y = 1000
-            self.iven_pos = (573, 963)
+            self.iven_pos = (self.iven_pos[0], 963)
         else:
             invenui_y = 100
-            self.iven_pos = (573, 63)
+            self.iven_pos = (self.iven_pos[0], 63)
 
         self.ui_image[0].draw(960,invenui_y)
         self.ui_image[1].clip_draw(332, 2256 - 432 - 57, 73, 57, 1760, 950, 73 * 4, 57 * 4)
         for i in range(13):
-            if self.inven[0][i] == 1:
+            if self.inven[0][i].item == 1:
                 self.item_tool.clip_draw(79, 384 - (64 * 0 + 48), 17, 17, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
-            elif self.inven[0][i] == 2:
+            elif self.inven[0][i].item == 2:
                 self.item_tool.clip_draw(79, 384 - (64 * 1 + 48), 17, 17, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
-            elif self.inven[0][i] == 3:
+            elif self.inven[0][i].item == 3:
                 self.item_tool.clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
-            elif self.inven[0][i] == 4:
+            elif self.inven[0][i].item == 4:
                 self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
+            elif self.inven[0][i].item == 5:
+                self.weapon_image.clip_draw(7*16, 16, 16, 16, 604 + 64 * i, invenui_y, 17 * 4, 17 * 4)
         self.drawitemrec()
-        draw_rectangle(pos[0] - 30,pos[1] - 65, pos[0] + 30, pos[1] + 65)
+        draw_rectangle(pos[0] - 30,pos[1] - 65, pos[0] + 30, pos[1])
 
     def get_bb(self):
         #pos = self.bg.to_screen(self.pos)
-        return self.dpos[0] - 30, self.dpos[1] - 65, self.dpos[0] + 30, self.dpos[1] + 65
+        return self.dpos[0] - 30, self.dpos[1] - 65, self.dpos[0] + 30, self.dpos[1]
 
     def update(self):
-        if self.anim < 1:
+        if self.state == Player.RUNNING:
             x, y = self.pos
             dx,dy = self.delta
             x += dx * self.speed * self.mag * gfw.delta_time
@@ -142,80 +167,64 @@ class Player:
                     if self.farm_objects[cy][cx].col == True:
                         if gobj.collides_box(self,self.farm_objects[cy][cx]):
                             x, y = self.pos
-            '''
-            for cy in range(65):
-                for cx in range(80):
-                    if self.farm_objects[cy][cx].col == False:
-                        colmin = self.bg.to_screen((68*cx, 82*cy))
-                        colmax = self.bg.to_screen((68*(cx+1), 82*(cy+1)))
-                        if pmin[0] < colmax[0] and colmin[0] < pmax[0]:
-                            if pmin[1] < colmax[1] and colmin[1] < pmin[1]:
-                                pass
-                                
-                                if pmax[0] > colmin[0]:
-                                    back_x = (pmax[0] - colmin[0])
-                                elif pmin[0] < colmax[0]:
-                                    back_x = (colmax[0] - pmin[0])
-                                else:
-                                    back_x = 0
-
-                                if pmax[1] > colmin[1]:
-                                    back_y = (pmax[1] - colmin[1])
-                                elif pmin[1] < colmax[1]:
-                                    back_y = (colmax[1] - pmin[1])
-                                else:
-                                    back_y = 0
-
-                                bposx, bposy = self.bg.translate((back_x,back_y))
-                                x -= back_x
-                                y -= back_y
-                                '''
 
             self.pos = x,y
 
         self.time += gfw.delta_time
         frame = self.time * 15
-        if self.anim > 0:
+        if self.state != Player.RUNNING:
             frame = self.time * 10
         #self.fidx = int(frame) % self.fmax
         self.fidx = (self.fidx + 1) % self.fmax
-        if self.anim > 0 and self.fidx == 0:
+        if self.state != Player.RUNNING and self.fidx == 0:
             self.set_pause()
 
     def handle_event(self, e):
         pair = (e.type, e.key)
-        if pair in Player.KEY_MAP and self.anim < 1:
-            pdx = self.delta[0]
-            self.delta = gobj.point_add(self.delta, Player.KEY_MAP[pair])
-            dx = self.delta[0]
-            dy = self.delta[1]
-            if dx < 0 and dy != 0:
-                self.action = 1
-                self.fmax = 6
-                self.mirror = True
-            elif dx > 0 and dy != 0:
-                self.action = 1
-                self.fmax = 6
-                self.mirror = False
-            elif dx > 0:
-                self.action = 1
-                self.fmax = 6
-                self.mirror = False
-            elif dx < 0:
-                self.action = 1
-                self.fmax = 6
-                self.mirror = True
-            elif dy > 0:
-                self.action = 0
-                self.fmax = 8
-                self.mirror = False
-            elif dy < 0:
-                self.action = 2
-                self.fmax = 8
-                self.mirror = False
-            else:
-                self.fmax = 1
-            # print(dx, pdx, self.action)
+
+        if self.mousecap:
+            if e.type == SDL_KEYDOWN:
+                self.keycap = True
+                print(self.keycap)
+
+        if pair in Player.KEY_MAP and self.mousecap == False:
+            if self.state == Player.RUNNING:
+
+                if self.keycap:
+                    if e.type == SDL_KEYUP:
+                        self.keycap = False
+                else:
+                    self.delta = gobj.point_add(self.delta, Player.KEY_MAP[pair])
+
+                dx = self.delta[0]
+                dy = self.delta[1]
+                if dx < 0 and dy != 0:
+                    self.action = 1
+                    self.fmax = 6
+                    self.mirror = True
+                elif dx > 0 and dy != 0:
+                    self.action = 1
+                    self.fmax = 6
+                    self.mirror = False
+                elif dx > 0:
+                    self.action = 1
+                    self.fmax = 6
+                    self.mirror = False
+                elif dx < 0:
+                    self.action = 1
+                    self.fmax = 6
+                    self.mirror = True
+                elif dy > 0:
+                    self.action = 0
+                    self.fmax = 8
+                    self.mirror = False
+                elif dy < 0:
+                    self.action = 2
+                    self.fmax = 8
+                    self.mirror = False
+                else:
+                    self.fmax = 1
+
         elif pair == Player.KEYDOWN_LSHIFT:
             self.mag *= 2
         elif pair == Player.KEYUP_LSHIFT:
@@ -226,14 +235,13 @@ class Player:
 
         elif pair in Player.KEY_ITEM_MAP:
             self.iven_pos = Player.KEY_ITEM_MAP[pair]
-            self.equip = self.inven[0][(self.iven_pos[0]-573) // 64]
-
+            self.equip = self.inven[0][(self.iven_pos[0]-573) // 64].item
 
         elif e.type == SDL_MOUSEBUTTONDOWN:
-            if self.equip > 0 and self.anim < 1 and self.fmax == 1:
-                self.delta = (0,0)
-                self.equip = self.inven[0][(self.iven_pos[0] - 573) // 64]
-                self.anim = self.equip
+            self.mousecap = True
+            if self.equip in range(1, 6) and self.state == Player.RUNNING and self.fmax == 1:
+                self.equip = self.inven[0][(self.iven_pos[0] - 573) // 64].item
+                self.state = self.equip
                 if self.equip == 1:
                     if self.action == 1:
                         self.fidex = 0
@@ -250,6 +258,7 @@ class Player:
                         self.fidex = 0
                         self.fmax = 5
 
+
                 elif self.equip == 3:
                     if self.action == 1:
                         self.fidex = 0
@@ -259,15 +268,19 @@ class Player:
                         self.fmax = 5
 
                 elif self.equip == 4:
-                    if self.action == 1:
-                        self.fidex = 0
-                        self.fmax = 4
-                    else:
+                    if self.action == 2:
                         self.fidex = 0
                         self.fmax = 5
+                    else:
+                        self.fidex = 0
+                        self.fmax = 7
+
+                elif self.equip == 5:
+                    self.fidex = 0
+                    self.fmax = 3
 
         elif e.type == SDL_MOUSEBUTTONUP:
-            pass
+            self.mousecap = False
 
         elif e.type == SDL_MOUSEWHEEL:
             print('mouse wheel')
@@ -281,8 +294,9 @@ class Player:
                     self.iven_pos[0] = 573 + 64 * 11
                 else:
                     self.iven_pos[0] -= 64
+
     def set_pause(self):
-        self.anim = 0
+        self.state = Player.RUNNING
         self.fmax = 1
         self.fidx = 0
         self.delta = (0, 0)

@@ -77,7 +77,7 @@ def enter():
     gfw.world.init(['bg','tile', 'object', 'player','ui'])
     #Zombie.load_all_images()
 
-    global player,bg ,homy, farmtile, tile, coltile, tile_object
+    global player,bg ,homy, farmtile, tile, farm_objects, tile_object
 
     farmtile = [[0] * FARM_XBOARD for i in range(FARM_YBOARD)]
 
@@ -157,7 +157,7 @@ def draw():
     # gobj.draw_collision_box()
     
 def handle_event(e):
-    global player, farmtile
+    global player, farmtile, farm_objects
     # prev_dx = boy.dx
     if e.type == SDL_QUIT:
         gfw.quit()
@@ -171,21 +171,38 @@ def handle_event(e):
     player.handle_event(e)
 
     if e.type == SDL_MOUSEBUTTONDOWN:
-        if player.equip == 1:
-            player_xindex = (int)(player.pos[0] // 68)
-            player_yindex = (int)((player.pos[1] - 20) // 82)
+        player_xindex = (int)(player.pos[0] // 68)
+        player_yindex = (int)((player.pos[1] - 20) // 82)
 
-            print('player pos' + str(player.pos))
-            print('x: '+str(player_xindex) +' y: '+ str(player_yindex))
-            if player.action == 0:
-                farmtile[player_yindex+1][player_xindex] = 1
-            elif player.action == 1:
-                if player.mirror == True:
-                    farmtile[player_yindex][player_xindex - 1] = 1
-                else:
-                    farmtile[player_yindex][player_xindex + 1] = 1
+        if player.action == 0:
+            x_tile = player_xindex
+            y_tile = player_yindex + 1
+        elif player.action == 1:
+            if player.mirror == True:
+                x_tile = player_xindex - 1
+                y_tile = player_yindex
             else:
-                farmtile[player_yindex - 1][player_xindex] = 1
+                x_tile = player_xindex + 1
+                y_tile = player_yindex
+        else:
+            x_tile = player_xindex
+            y_tile = player_yindex - 1
+
+        if player.equip == 1:
+            if farm_objects[y_tile][x_tile].tile == 0 and farm_objects[y_tile][x_tile].col == False:
+                farmtile[y_tile][x_tile] = 1
+
+        elif player.equip == 2:
+            if farm_objects[y_tile][x_tile].tile == 2:
+                farm_objects[y_tile][x_tile].tile = 0
+                farm_objects[y_tile][x_tile].col = False
+
+        elif player.equip == 3:
+            if farm_objects[y_tile][x_tile].tile == 3:
+                farm_objects[y_tile][x_tile].tile = 0
+                farm_objects[y_tile][x_tile].col = False
+
+        player.farm_objects = farm_objects
 
 def resume():
     global player

@@ -13,6 +13,7 @@ class Menu_UI:
         self.selectui_image = gfw.image.load(gobj.RES_DIR + '/Cursors.ko-KR.png')
 
         self.item_tool = gfw.image.load(gobj.RES_DIR + '/tools.png')
+        self.item_weapon = gfw.image.load(gobj.RES_DIR + '/weapons.png')
         self.reset()
         self.inven = inven
         self.capture = False
@@ -51,6 +52,8 @@ class Menu_UI:
                         self.item_tool.clip_draw(79, 384 - (64 * 2 + 48), 17, 17, 604 + 64 * x, posy, 17 * 4, 17 * 4)
                     elif self.inven[y][x] == 4:
                         self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, 604 + 64 * x, posy, 17 * 4, 17 * 4)
+                    elif self.inven[y][x] == 5:
+                        self.item_weapon.clip_draw(7*16, 16, 16, 16, 604 + 64 * x, posy, 17 * 4, 17 * 4)
 
             if self.capture:
                 if self.select == 1:
@@ -61,6 +64,8 @@ class Menu_UI:
                     self.item_tool.clip_draw(79, 384 - (64 * 2 + 48), 17, 17, *self.mouse_pos, 17 * 4, 17 * 4)
                 elif self.select == 4:
                     self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, *self.mouse_pos, 17 * 4, 17 * 4)
+                elif self.select == 5:
+                    self.item_weapon.clip_draw(7 * 16, 16, 16, 16, *self.mouse_pos, 17 * 4, 17 * 4)
 
 
     def handle_event(self, e):
@@ -69,7 +74,7 @@ class Menu_UI:
 
             for i in range(3):
                 if i != self.selectui:
-                    if  600 + (i * 16 * 4) - 16 * 2< self.mouse_pos[0] < 600 + (i * 16 * 4) + 16 * 4 and 850 - 16*2< self.mouse_pos[1]  < 850 - 16*2 +16*4:
+                    if 600 + (i * 16 * 4) - 16 * 2< self.mouse_pos[0] < 600 + (i * 16 * 4) + 16 * 4 and 850 - 16*2< self.mouse_pos[1]  < 850 - 16*2 +16*4:
                         self.selectui = i
 
 
