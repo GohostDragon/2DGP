@@ -190,6 +190,28 @@ class Player:
         self.fidx = (self.fidx + 1) % self.fmax
         if self.state != Player.RUNNING and self.fidx == 0:
             self.set_pause()
+            if self.equip == 1:
+                if self.farm_objects[self.y_tile][self.x_tile].tile == 0 and self.farm_objects[self.y_tile][self.x_tile].col == False:
+                    self.farmtile[self.y_tile][self.x_tile] = 1
+
+            elif self.equip == 2:
+                if self.farm_objects[self.y_tile][self.x_tile].tile == 2:
+                    self.farm_objects[self.y_tile][self.x_tile].tile = 0
+                    self.farm_objects[self.y_tile][self.x_tile].col = False
+
+            elif self.equip == 3:
+                if self.farm_objects[self.y_tile][self.x_tile].tile == 3:
+                    self.farm_objects[self.y_tile][self.x_tile].tile = 0
+                    self.farm_objects[self.y_tile][self.x_tile].col = False
+
+            elif self.equip == 4:
+                if self.farmtile[self.y_tile][self.x_tile] == 1:
+                    self.farmtile[self.y_tile][self.x_tile] = 2
+
+            elif self.equip == 5:
+                if self.farm_objects[self.y_tile][self.x_tile].tile == 1:
+                    self.farm_objects[self.y_tile][self.x_tile].tile = 0
+                    self.farm_objects[self.y_tile][self.x_tile].col = False
 
     def handle_event(self, e):
         pair = (e.type, e.key)
@@ -254,6 +276,24 @@ class Player:
             if self.equip in range(1, 6) and self.state == Player.RUNNING and self.fmax == 1:
                 self.equip = self.inven[0][(self.iven_pos[0] - 573) // 64].item
                 self.state = self.equip
+
+                player_xindex = (int)(self.pos[0] // 68)
+                player_yindex = (int)((self.pos[1] - 20) // 82)
+
+                if self.action == 0:
+                    self.x_tile = player_xindex
+                    self.y_tile = player_yindex + 1
+                elif self.action == 1:
+                    if self.mirror == True:
+                        self.x_tile = player_xindex - 1
+                        self.y_tile = player_yindex
+                    else:
+                        self.x_tile = player_xindex + 1
+                        self.y_tile = player_yindex
+                else:
+                    self.x_tile = player_xindex
+                    self.y_tile = player_yindex - 1
+
                 if self.equip == 1:
                     if self.action == 1:
                         self.fidex = 0
@@ -290,6 +330,13 @@ class Player:
                 elif self.equip == 5:
                     self.fidex = 0
                     self.fmax = 3
+
+            if self.equip == 6:
+                if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
+                    if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
+                        self.farm_objects[self.y_tile][self.x_tile].tile = 4
+                        self.farm_objects[self.y_tile][self.x_tile].col = False
+                        self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
 
         elif e.type == SDL_MOUSEBUTTONUP:
             self.mousecap = False

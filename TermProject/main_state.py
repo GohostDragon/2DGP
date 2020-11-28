@@ -174,59 +174,11 @@ def handle_event(e):
             player.set_pause()
             start()
 
+    player.farmtile = farmtile
+    player.farm_objects = farm_objects
     player.handle_event(e)
-
-    if e.type == SDL_MOUSEBUTTONDOWN:
-        player_xindex = (int)(player.pos[0] // 68)
-        player_yindex = (int)((player.pos[1] - 20) // 82)
-
-        if player.action == 0:
-            x_tile = player_xindex
-            y_tile = player_yindex + 1
-        elif player.action == 1:
-            if player.mirror == True:
-                x_tile = player_xindex - 1
-                y_tile = player_yindex
-            else:
-                x_tile = player_xindex + 1
-                y_tile = player_yindex
-        else:
-            x_tile = player_xindex
-            y_tile = player_yindex - 1
-
-        if player.equip == 1:
-            if farm_objects[y_tile][x_tile].tile == 0 and farm_objects[y_tile][x_tile].col == False:
-                farmtile[y_tile][x_tile] = 1
-
-        elif player.equip == 2:
-            if farm_objects[y_tile][x_tile].tile == 2:
-                farm_objects[y_tile][x_tile].tile = 0
-                farm_objects[y_tile][x_tile].col = False
-
-        elif player.equip == 3:
-            if farm_objects[y_tile][x_tile].tile == 3:
-                farm_objects[y_tile][x_tile].tile = 0
-                farm_objects[y_tile][x_tile].col = False
-
-        elif player.equip == 4:
-            if farmtile[y_tile][x_tile] == 1:
-                farmtile[y_tile][x_tile] = 2
-
-        elif player.equip == 5:
-            if farm_objects[y_tile][x_tile].tile == 1:
-                farm_objects[y_tile][x_tile].tile = 0
-                farm_objects[y_tile][x_tile].col = False
-
-        elif player.equip == 6:
-            if farmtile[y_tile][x_tile] == 1 or farmtile[y_tile][x_tile] == 2:
-                if farm_objects[y_tile][x_tile].tile == 0:
-                    farm_objects[y_tile][x_tile].tile = 4
-                    farm_objects[y_tile][x_tile].col = False
-                    player.inven[0][(player.iven_pos[0] - 573) // 64].useItem()
-
-        if player.inven[0][(player.iven_pos[0] - 573) // 64].emptyItem():
-            player.equip = 0
-        player.farm_objects = farm_objects
+    farmtile = player.farmtile
+    farm_objects = player.farm_objects
 
 def resume():
     global player
