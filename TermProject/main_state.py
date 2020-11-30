@@ -83,7 +83,7 @@ def enter():
     gfw.world.init(['bg','tile', 'object', 'player','ui'])
     #Zombie.load_all_images()
 
-    global player,bg ,homy, farmtile, tile, bg_tile, tile_object
+    global player,bg ,homy, farmtile, tile, bg_tile, tile_object, bg_music
 
     farmtile = [[0] * FARM_XBOARD for i in range(FARM_YBOARD)]
 
@@ -103,6 +103,8 @@ def enter():
     bg = InBackground('shop.jpg')
     #bg = gfw.image.load(gobj.RES_DIR + '/map/home.jpg')
 
+    bg_music = load_music(gobj.RES_BG + '1-02 Cloud Country.mp3')
+    bg_music.repeat_play()
     #bg = FixedBackground('town.jpg')
     #bg = FixedBackground('farm.jpg')
     player.bg = bg

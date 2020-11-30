@@ -1,7 +1,7 @@
 import gfw
 from pico2d import *
 import main_state
-from gobj import res
+from gobj import *
 
 canvas_width = main_state.canvas_width
 canvas_height = main_state.canvas_height
@@ -9,13 +9,8 @@ canvas_height = main_state.canvas_height
 center_x = canvas_width // 2
 center_y = canvas_height // 2
 
-class Tile:
-    def __init__(self):
-        self.tile = 0
-        self.col = True
-
 def enter():
-    global back, bg, fg, index, file
+    global back, bg, fg, index, file, bg_music
     back = gfw.image.load(res('/logo/loading.jpg'))
     bg = gfw.image.load(res('progress_bg.png'))
     fg = gfw.image.load(res('progress_fg.png'))
@@ -29,11 +24,16 @@ def enter():
     frame_interval = gfw.frame_interval
     gfw.frame_interval = 0
 
+    bg_music = load_music(RES_BG+'1-18 Load Game.mp3')
+    bg_music.repeat_play()
+
 def exit():
-    global back, bg, fg
+    global back, bg, fg, bg_music
     gfw.image.unload(res('loading_1280x960.png'))
     gfw.image.unload(res('progress_bg.png'))
     gfw.image.unload(res('progress_fg.png'))
+    bg_music.stop()
+    del bg_music
     del back
     del bg
     del fg

@@ -85,6 +85,10 @@ class Player:
         self.weapon_image = gfw.image.load(gobj.RES_DIR + '/weapons.png')
         self.item_image = gfw.image.load(gobj.RES_DIR + '/object/springobjects.ko-KR.png')
 
+        self.tool_effect_sound = []
+        self.tool_effect_sound.append(load_wav(gobj.RES_EF + 'hoeHit.wav'))
+        self.tool_effect_sound.append(load_wav(gobj.RES_EF + 'axchop.wav'))
+
         self.state = Player.RUNNING
         self.time = 0
         self.fidx = 0
@@ -265,7 +269,7 @@ class Player:
             if self.equip in range(1, 6) and self.state == Player.RUNNING and self.fmax == 1:
                 self.equip = self.inven[0][(self.iven_pos[0] - 573) // 64].item
                 self.state = self.equip
-
+                self.tool_effect_sound[self.state-1].play()
                 player_xindex = (int)(self.pos[0] // 68)
                 player_yindex = (int)((self.pos[1] - 20) // 82)
 
@@ -345,6 +349,7 @@ class Player:
 
     def set_pause(self):
         self.state = Player.RUNNING
+        self.fmax = 1
         self.fidx = 0
         if self.delta[0] < 0 and self.delta[1] != 0:
             self.action = 1

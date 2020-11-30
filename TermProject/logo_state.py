@@ -4,6 +4,7 @@ import main_state
 import gobj
 import random
 import loading_state
+import tile_object
 
 canvas_width = main_state.canvas_width
 canvas_height = main_state.canvas_height
@@ -17,6 +18,12 @@ timer = 0
 scale = 3
 
 cloudMax = 30
+
+class Farm_Object:
+    def __init__(self):
+        self.tile = 0
+        self.col = False
+        self.pos = (0,0)
 
 class Cloud:
     def __init__(self, x, y, type):
@@ -52,7 +59,7 @@ class Cloud:
             self.x = canvas_width + 100
 
 def enter():
-    global back, logo, game_start, game_exit, cloud, cx, cloud, cloudMax
+    global back, logo, game_start, game_exit, cloud, cx, cloud, cloudMax, bg_music
     back = gfw.image.load(gobj.RES_DIR +'/logo/Stardew-Valley-Wallpaper-Wallpaper.jpg')
     logo = gfw.image.load(gobj.RES_DIR +'/logo/TitleButtons.ko-KR.png')
 
@@ -63,11 +70,15 @@ def enter():
 
     game_start = gfw.image.load(gobj.RES_DIR +'/logo/TitleButtons.ko-KR.png')
     game_exit = gfw.image.load(gobj.RES_DIR +'/logo/TitleButtons.ko-KR.png')
+    bg_music = load_music(gobj.RES_BG+'1-01 Stardew Valley Overture.mp3')
+    bg_music.repeat_play()
 
 def exit():
-    global back, logo, game_start, game_exit
+    global back, logo, game_start, game_exit, bg_music
     gfw.image.unload(gobj.RES_DIR +'/logo/Stardew-Valley-Wallpaper-Wallpaper.jpg')
     gfw.image.unload(gobj.RES_DIR +'/logo/TitleButtons.ko-KR.png')
+    bg_music.stop()
+    del bg_music
     del back
     del logo
     del game_start

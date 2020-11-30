@@ -3,6 +3,8 @@ from pico2d import *
 import gfw
 
 RES_DIR = 'res'
+RES_BG = 'sound/background/'
+RES_EF = 'sound/effect/'
 
 def res(file):
     return RES_DIR + '/' + file
