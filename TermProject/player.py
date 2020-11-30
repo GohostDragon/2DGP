@@ -63,8 +63,8 @@ class Player:
         #self.pos = get_canvas_width() // 2, get_canvas_height() // 2
 
         self.pos = (5000,2000)
-
-        self.delta = 0, 0
+        self.pos = get_canvas_width() // 2, get_canvas_height() // 2
+        self.delta = (0, 0)
         self.target = None
         self.speed = 100
         self.image = []
@@ -177,7 +177,7 @@ class Player:
             for cy in range(65):
                 for cx in range(80):
                     if self.farm_objects[cy][cx].col == True:
-                        if gobj.collides_box(self,self.farm_objects[cy][cx]):
+                        if gobj.collides_box(self, self.farm_objects[cy][cx]):
                             x, y = self.pos
 
             self.pos = x,y
@@ -216,19 +216,9 @@ class Player:
     def handle_event(self, e):
         pair = (e.type, e.key)
 
-        if self.mousecap:
-            if e.type == SDL_KEYDOWN:
-                self.keycap = True
-                print(self.keycap)
-
-        if pair in Player.KEY_MAP and self.mousecap == False:
+        if pair in Player.KEY_MAP:
+            self.delta = gobj.point_add(self.delta, Player.KEY_MAP[pair])
             if self.state == Player.RUNNING:
-
-                if self.keycap:
-                    if e.type == SDL_KEYUP:
-                        self.keycap = False
-                else:
-                    self.delta = gobj.point_add(self.delta, Player.KEY_MAP[pair])
 
                 dx = self.delta[0]
                 dy = self.delta[1]
@@ -272,7 +262,6 @@ class Player:
             self.equip = self.inven[0][(self.iven_pos[0]-573) // 64].item
 
         elif e.type == SDL_MOUSEBUTTONDOWN:
-            self.mousecap = True
             if self.equip in range(1, 6) and self.state == Player.RUNNING and self.fmax == 1:
                 self.equip = self.inven[0][(self.iven_pos[0] - 573) // 64].item
                 self.state = self.equip
@@ -339,7 +328,7 @@ class Player:
                         self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
 
         elif e.type == SDL_MOUSEBUTTONUP:
-            self.mousecap = False
+            pass
 
         elif e.type == SDL_MOUSEWHEEL:
             print('mouse wheel')
@@ -356,9 +345,25 @@ class Player:
 
     def set_pause(self):
         self.state = Player.RUNNING
-        self.fmax = 1
         self.fidx = 0
-        self.delta = (0, 0)
+        if self.delta[0] < 0 and self.delta[1] != 0:
+            self.action = 1
+            self.mirror = True
+        elif self.delta[0] > 0 and self.delta[1] != 0:
+            self.action = 1
+            self.mirror = False
+        elif self.delta[0] > 0:
+            self.action = 1
+            self.mirror = False
+        elif self.delta[0] < 0:
+            self.action = 1
+            self.mirror = True
+        elif self.delta[1] > 0:
+            self.action = 0
+            self.mirror = False
+        elif self.delta[1] < 0:
+            self.action = 2
+            self.mirror = False
 
     def __getstate__(self):
         dict = self.__dict__.copy()

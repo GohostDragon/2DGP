@@ -45,12 +45,13 @@ class Farm_Object:
         self.col = False
         self.pos = (0,0)
 
-class Farm_Manage_Object:
+class Tile_Object:
     def __init__(self,obj,bg):
         self.tile = obj.tile
         self.col = obj.col
         self.pos = obj.pos
         self.bg = bg
+        self.bgpos = bg.to_screen((68 * self.pos[0], 82 * self.pos[1]))
         self.tile_object = gfw.image.load(gobj.RES_DIR + '/object/springobjects.ko-KR.png')
         self.crop_object = gfw.image.load(gobj.RES_DIR + '/object/crops.png')
 
@@ -82,7 +83,7 @@ def enter():
     gfw.world.init(['bg','tile', 'object', 'player','ui'])
     #Zombie.load_all_images()
 
-    global player,bg ,homy, farmtile, tile, farm_objects, tile_object
+    global player,bg ,homy, farmtile, tile, bg_tile, tile_object
 
     farmtile = [[0] * FARM_XBOARD for i in range(FARM_YBOARD)]
 
@@ -102,12 +103,12 @@ def enter():
     bg = InBackground('shop.jpg')
     #bg = gfw.image.load(gobj.RES_DIR + '/map/home.jpg')
 
-    bg = FixedBackground('town.jpg')
-    bg = FixedBackground('farm.jpg')
+    #bg = FixedBackground('town.jpg')
+    #bg = FixedBackground('farm.jpg')
     player.bg = bg
     gfw.world.add(gfw.layer.bg, bg)
     bg.target = player
-
+    '''
     try:
         f = open('Farm_Tile.pickle', "rb")
         data_object = pickle.load(f)
@@ -125,8 +126,26 @@ def enter():
         for x in range(FARM_XBOARD):
             farm_objects[y][x].pos = (x, y)
             gfw.world.add(gfw.layer.object, farm_objects[y][x])
+    '''
+    try:
+        f = open('Shop_Tile.pickle', "rb")
+        data_object = pickle.load(f)
+        f.close()
+    except:
+        print("No Map file")
 
-    player.farm_objects = farm_objects
+    bg_tile = []
+    for y in range(FARM_YBOARD):
+        bg_tile.append([])
+        for x in range(FARM_XBOARD):
+            bg_tile[y].append(Tile_Object(data_object[y][x], bg))
+
+    for y in range(FARM_YBOARD):
+        for x in range(FARM_XBOARD):
+            bg_tile[y][x].pos = (x, y)
+
+    #player.farm_objects = farm_objects
+    player.farm_objects = bg_tile
 
     global main_ui
     main_ui = Main_UI(canvas_width - 40, canvas_height - 230)
@@ -163,7 +182,7 @@ def draw():
     # gobj.draw_collision_box()
     
 def handle_event(e):
-    global player, farmtile, farm_objects
+    global player, farmtile, bg_tile
     # prev_dx = boy.dx
     if e.type == SDL_QUIT:
         gfw.quit()
@@ -175,7 +194,7 @@ def handle_event(e):
             start()
 
     player.farmtile = farmtile
-    player.farm_objects = farm_objects
+    player.farm_objects = bg_tile
     player.handle_event(e)
     farmtile = player.farmtile
     farm_objects = player.farm_objects
