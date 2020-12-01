@@ -10,6 +10,7 @@ from main_ui import Main_UI
 from game_time import Game_Time
 
 import menu_state
+import shop_state
 import pickle
 
 canvas_width = 1920
@@ -17,10 +18,15 @@ canvas_height = 1080
 
 SAVE_FILENAME = 'zombies.pickle'
 
+#FARM_XBOARD = 80
+#FARM_YBOARD = 65
 FARM_XBOARD = 80
 FARM_YBOARD = 65
 
 HOME, FARM, TOWN, SHOP = range(4)
+MENU_STATE, SHOP_STATE = range(2)
+
+whostate = 0
 
 class Portal:
     def __init__(self, pos, nextmap, nextpos, key):
@@ -134,8 +140,17 @@ def mapchange(map, pos):
     gfw.world.add(gfw.layer.bg, bg)
 
 def start():
+    global whostate
     menu_state.inven = player.inven
+    whostate = MENU_STATE
     gfw.push(menu_state)
+
+def shpstatchange():
+    global whostate, main_ui
+    shop_state.inven = player.inven
+    shop_state.money = main_ui.money
+    whostate = SHOP_STATE
+    gfw.push(shop_state)
 
 def enter():
     gfw.world.init(['bg','tile', 'object', 'player','ui'])
@@ -149,8 +164,21 @@ def enter():
     worldmap.append(Map(FixedBackground('town.jpg'), 'Town_Tile.pickle'))
     worldmap.append(Map(InBackground('shop.jpg'),'Shop_Tile.pickle'))
 
-    worldmap[HOME].addPortal((11, 2), FARM,(4328.08, 3441.80), SDLK_DOWN)
+    worldmap[HOME].addPortal((11, 2), FARM, (4328.08, 3441.80), SDLK_DOWN)
     worldmap[FARM].addPortal((63, 41), HOME, (784.05, 249.96), SDLK_UP)
+    worldmap[FARM].addPortal((78, 39), TOWN, (45.29, 4495.97), SDLK_RIGHT)
+    worldmap[FARM].addPortal((78, 40), TOWN, (45.29, 4584.28), SDLK_RIGHT)
+    worldmap[FARM].addPortal((78, 41), TOWN, (45.29, 4672.76), SDLK_RIGHT)
+
+    worldmap[TOWN].addPortal((0, 54), FARM, (5337.16, 3280.91), SDLK_LEFT)
+    worldmap[TOWN].addPortal((0, 55), FARM, (5337.16, 3360.38), SDLK_LEFT)
+    worldmap[TOWN].addPortal((0, 56), FARM, (5337.16, 3443.38), SDLK_LEFT)
+
+    worldmap[TOWN].addPortal((43, 52), SHOP, (842.17, 253.06), SDLK_UP)
+    worldmap[TOWN].addPortal((44, 52), SHOP, (842.17, 253.06), SDLK_UP)
+
+    worldmap[SHOP].addPortal((12, 2), SHOP, (2947.63, 4345.54), SDLK_DOWN)
+
 
     current_map = HOME
 
@@ -236,6 +264,10 @@ def handle_event(e):
             player.set_pause()
             start()
 
+        elif e.key == SDLK_k:
+            player.set_pause()
+            shpstatchange()
+
         elif e.key == SDLK_a:
             player_xindex = (int)(player.pos[0] // 68)
             player_yindex = (int)((player.pos[1] - 20) // 82)
@@ -246,8 +278,10 @@ def handle_event(e):
         elif e.key == SDLK_SPACE:
             player_xindex = (int)(player.pos[0] // 68)
             player_yindex = (int)((player.pos[1] - 20) // 82)
-            if worldmap[current_map].portal[0].pos == (player_xindex, player_yindex):
-                mapchange(worldmap[current_map].portal[0].nextmap, worldmap[current_map].portal[0].nextpos)
+            for i in range(len(worldmap[current_map].portal)):
+                if worldmap[current_map].portal[i].pos == (player_xindex, player_yindex):
+                    mapchange(worldmap[current_map].portal[i].nextmap, worldmap[current_map].portal[i].nextpos)
+                    break
 
     player.farmtile = farmtile
     player.farm_objects = bg_tile
@@ -257,7 +291,10 @@ def handle_event(e):
 
 def resume():
     global player
-    player.inven = menu_state.inven
+    if whostate == MENU_STATE:
+        player.inven = menu_state.inven
+    elif whostate == SHOP_STATE:
+        player.inven = shop_state.inven
 
 def pause():
     pass

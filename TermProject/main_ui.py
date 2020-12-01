@@ -10,11 +10,15 @@ class Main_UI:
         self.right, self.y = right, y
         self.image = gfw.image.load(gobj.RES_DIR + '/number_24x32.png')
         self.digit_width = self.image.w // 10
+        self.upspeed = 9
         self.reset()
 
     def reset(self):
         self.money = 0
         self.display = 0
+
+    def setupspeed(self, speed):
+        self.upspeed = speed
 
     def draw(self):
         x = self.right
@@ -28,6 +32,6 @@ class Main_UI:
 
     def update(self):
         if self.display < self.money:
-            self.display += 9
+            self.display += self.upspeed
         else:
             self.display = self.money
