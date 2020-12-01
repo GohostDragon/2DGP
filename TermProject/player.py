@@ -3,6 +3,8 @@ from pico2d import *
 import gfw
 import gobj
 
+HOME, FARM, TOWN, SHOP = range(4)
+
 class Inven:
     def __init__(self):
         self.item = 0
@@ -114,8 +116,7 @@ class Player:
         self.equip = self.inven[0][0].item
         self.farm_objects = []
 
-        self.mousecap = False
-        self.keycap = False
+        self.current_map = HOME
 
     def drawitemrec(self):
         draw_rectangle(*self.iven_pos, self.iven_pos[0] + 65, self.iven_pos[1] + 70)
@@ -163,11 +164,11 @@ class Player:
             if self.inven[0][i].item > 5:
                 self.font.draw(604 + 64 * i + 10, invenui_y - 25, str(self.inven[0][i].count), (255, 255, 255))
         self.drawitemrec()
-        draw_rectangle(pos[0] - 30, pos[1] - 65, pos[0] + 30, pos[1])
+        draw_rectangle(*self.get_bb())
 
     def get_bb(self):
-        #pos = self.bg.to_screen(self.pos)
-        return self.dpos[0] - 30, self.dpos[1] - 65, self.dpos[0] + 30, self.dpos[1]
+        # pos = self.bg.to_screen(self.pos)
+        return self.dpos[0] - 25, self.dpos[1] - 65, self.dpos[0] + 25, self.dpos[1] - 10
 
     def update(self):
         if self.state == Player.RUNNING:
@@ -194,28 +195,29 @@ class Player:
         self.fidx = (self.fidx + 1) % self.fmax
         if self.state != Player.RUNNING and self.fidx == 0:
             self.set_pause()
-            if self.equip == 1:
-                if self.farm_objects[self.y_tile][self.x_tile].tile == 0 and self.farm_objects[self.y_tile][self.x_tile].col == False:
-                    self.farmtile[self.y_tile][self.x_tile] = 1
+            if self.current_map == FARM:
+                if self.equip == 1:
+                    if self.farm_objects[self.y_tile][self.x_tile].tile == 0 and self.farm_objects[self.y_tile][self.x_tile].col == False:
+                        self.farmtile[self.y_tile][self.x_tile] = 1
 
-            elif self.equip == 2:
-                if self.farm_objects[self.y_tile][self.x_tile].tile == 2:
-                    self.farm_objects[self.y_tile][self.x_tile].tile = 0
-                    self.farm_objects[self.y_tile][self.x_tile].col = False
+                elif self.equip == 2:
+                    if self.farm_objects[self.y_tile][self.x_tile].tile == 2:
+                        self.farm_objects[self.y_tile][self.x_tile].tile = 0
+                        self.farm_objects[self.y_tile][self.x_tile].col = False
 
-            elif self.equip == 3:
-                if self.farm_objects[self.y_tile][self.x_tile].tile == 3:
-                    self.farm_objects[self.y_tile][self.x_tile].tile = 0
-                    self.farm_objects[self.y_tile][self.x_tile].col = False
+                elif self.equip == 3:
+                    if self.farm_objects[self.y_tile][self.x_tile].tile == 3:
+                        self.farm_objects[self.y_tile][self.x_tile].tile = 0
+                        self.farm_objects[self.y_tile][self.x_tile].col = False
 
-            elif self.equip == 4:
-                if self.farmtile[self.y_tile][self.x_tile] == 1:
-                    self.farmtile[self.y_tile][self.x_tile] = 2
+                elif self.equip == 4:
+                    if self.farmtile[self.y_tile][self.x_tile] == 1:
+                        self.farmtile[self.y_tile][self.x_tile] = 2
 
-            elif self.equip == 5:
-                if self.farm_objects[self.y_tile][self.x_tile].tile == 1:
-                    self.farm_objects[self.y_tile][self.x_tile].tile = 0
-                    self.farm_objects[self.y_tile][self.x_tile].col = False
+                elif self.equip == 5:
+                    if self.farm_objects[self.y_tile][self.x_tile].tile == 1:
+                        self.farm_objects[self.y_tile][self.x_tile].tile = 0
+                        self.farm_objects[self.y_tile][self.x_tile].col = False
 
     def handle_event(self, e):
         pair = (e.type, e.key)
@@ -266,26 +268,26 @@ class Player:
             self.equip = self.inven[0][(self.iven_pos[0]-573) // 64].item
 
         elif e.type == SDL_MOUSEBUTTONDOWN:
+            player_xindex = (int)(self.pos[0] // 68)
+            player_yindex = (int)((self.pos[1] - 20) // 82)
+            if self.action == 0:
+                self.x_tile = player_xindex
+                self.y_tile = player_yindex + 1
+            elif self.action == 1:
+                if self.mirror == True:
+                    self.x_tile = player_xindex - 1
+                    self.y_tile = player_yindex
+                else:
+                    self.x_tile = player_xindex + 1
+                    self.y_tile = player_yindex
+            else:
+                self.x_tile = player_xindex
+                self.y_tile = player_yindex - 1
+
             if self.equip in range(1, 6) and self.state == Player.RUNNING and self.fmax == 1:
                 self.equip = self.inven[0][(self.iven_pos[0] - 573) // 64].item
                 self.state = self.equip
-                self.tool_effect_sound[self.state-1].play()
-                player_xindex = (int)(self.pos[0] // 68)
-                player_yindex = (int)((self.pos[1] - 20) // 82)
-
-                if self.action == 0:
-                    self.x_tile = player_xindex
-                    self.y_tile = player_yindex + 1
-                elif self.action == 1:
-                    if self.mirror == True:
-                        self.x_tile = player_xindex - 1
-                        self.y_tile = player_yindex
-                    else:
-                        self.x_tile = player_xindex + 1
-                        self.y_tile = player_yindex
-                else:
-                    self.x_tile = player_xindex
-                    self.y_tile = player_yindex - 1
+                #self.tool_effect_sound[self.state-1].play()
 
                 if self.equip == 1:
                     if self.action == 1:

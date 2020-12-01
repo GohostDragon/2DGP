@@ -20,6 +20,31 @@ SAVE_FILENAME = 'zombies.pickle'
 FARM_XBOARD = 80
 FARM_YBOARD = 65
 
+HOME, FARM, TOWN, SHOP = range(4)
+
+class Portal:
+    def __init__(self, pos, nextmap, nextpos, key):
+        self.pos = pos
+        self.nextmap = nextmap
+        self.nextpos = nextpos
+        self.key = key
+
+class Map:
+    def __init__(self, bg, data):
+        self.bg = bg
+        self.portal = []
+
+        self.data = data
+
+    def addPortal(self, pos, nextmap, nextpos, key):
+        self.portal.append(Portal(pos, nextmap, nextpos, key))
+
+    def setTile(self, tile):
+        self.tile = tile
+
+    def setObject(self,objects):
+        self.objcts = objects
+
 class Map_Tile:
     def __init__(self):
         self.hoedirt = gfw.image.load(gobj.RES_DIR + '/hoeDirt.png')
@@ -75,6 +100,39 @@ class Tile_Object:
     def update(self):
         self.bgpos = bg.to_screen((68 * self.pos[0], 82 * self.pos[1]))
 
+def mapchange(map, pos):
+    global current_map, player, bg, bg_tile
+
+    gfw.world.clear_at(gfw.layer.object)
+
+
+    current_map = map
+    player.pos = pos
+
+    gfw.world.remove(bg)
+    bg = worldmap[current_map].bg
+
+    f = open(worldmap[current_map].data, "rb")
+    data_object = pickle.load(f)
+    f.close()
+
+    bg_tile = []
+    for y in range(FARM_YBOARD):
+        bg_tile.append([])
+        for x in range(FARM_XBOARD):
+            bg_tile[y].append(Tile_Object(data_object[y][x], bg))
+
+    for y in range(FARM_YBOARD):
+        for x in range(FARM_XBOARD):
+            bg_tile[y][x].pos = (x, y)
+            gfw.world.add(gfw.layer.object, bg_tile[y][x])
+
+    player.farm_objects = bg_tile
+    player.current_map = current_map
+    player.bg = bg
+    bg.target = player
+    gfw.world.add(gfw.layer.bg, bg)
+
 def start():
     menu_state.inven = player.inven
     gfw.push(menu_state)
@@ -83,54 +141,37 @@ def enter():
     gfw.world.init(['bg','tile', 'object', 'player','ui'])
     #Zombie.load_all_images()
 
-    global player,bg ,homy, farmtile, tile, bg_tile, tile_object, bg_music
+    global player,bg ,homy, farmtile, tile, bg_tile, tile_object, bg_music, current_map, worldmap
+
+    worldmap = []
+    worldmap.append(Map(InBackground('home.jpg'),'Home_Tile.pickle'))
+    worldmap.append(Map(FixedBackground('farm.jpg'), 'Farm_Tile.pickle'))
+    worldmap.append(Map(FixedBackground('town.jpg'), 'Town_Tile.pickle'))
+    worldmap.append(Map(InBackground('shop.jpg'),'Shop_Tile.pickle'))
+
+    worldmap[HOME].addPortal((11, 2), FARM,(4328.08, 3441.80), SDLK_DOWN)
+    worldmap[FARM].addPortal((63, 41), HOME, (784.05, 249.96), SDLK_UP)
+
+    current_map = HOME
+
+    bg = worldmap[current_map].bg
 
     farmtile = [[0] * FARM_XBOARD for i in range(FARM_YBOARD)]
 
     player = Player()
     gfw.world.add(gfw.layer.player, player)
-    #player.coltile = coltile
 
     tile = Map_Tile()
     gfw.world.add(gfw.layer.tile, tile)
 
-    # bg = gobj.ImageObject('town.jpg', (canvas_width // 2, canvas_height // 2))
-    # gfw.world.add(gfw.layer.bg, bg)
-    #bg = Background('town.png')
-    bg = FixedBackground('farm.jpg')
-    bg = FixedBackground('town.jpg')
-    bg = InBackground('home.jpg')
-    bg = InBackground('shop.jpg')
-    #bg = gfw.image.load(gobj.RES_DIR + '/map/home.jpg')
-
     bg_music = load_music(gobj.RES_BG + '1-02 Cloud Country.mp3')
     bg_music.repeat_play()
-    #bg = FixedBackground('town.jpg')
-    #bg = FixedBackground('farm.jpg')
     player.bg = bg
     gfw.world.add(gfw.layer.bg, bg)
     bg.target = player
-    '''
-    try:
-        f = open('Farm_Tile.pickle', "rb")
-        data_object = pickle.load(f)
-        f.close()
-    except:
-        print("No Map file")
 
-    farm_objects = []
-    for y in range(FARM_YBOARD):
-        farm_objects.append([])
-        for x in range(FARM_XBOARD):
-            farm_objects[y].append(Farm_Manage_Object(data_object[y][x], bg))
-
-    for y in range(FARM_YBOARD):
-        for x in range(FARM_XBOARD):
-            farm_objects[y][x].pos = (x, y)
-            gfw.world.add(gfw.layer.object, farm_objects[y][x])
-    '''
     try:
-        f = open('Shop_Tile.pickle', "rb")
+        f = open('HOME_Tile.pickle', "rb")
         data_object = pickle.load(f)
         f.close()
     except:
@@ -184,7 +225,7 @@ def draw():
     # gobj.draw_collision_box()
     
 def handle_event(e):
-    global player, farmtile, bg_tile
+    global player, farmtile, bg_tile, farm_objects
     # prev_dx = boy.dx
     if e.type == SDL_QUIT:
         gfw.quit()
@@ -195,11 +236,24 @@ def handle_event(e):
             player.set_pause()
             start()
 
+        elif e.key == SDLK_a:
+            player_xindex = (int)(player.pos[0] // 68)
+            player_yindex = (int)((player.pos[1] - 20) // 82)
+            print('플레이어 좌표: ' + str(player.pos))
+            print('플레이어 인덱스 좌표: ' + str(player_xindex) + ', ' + str(player_yindex))
+
+        #elif e.key == worldmap[current_map].portal[0].key:
+        elif e.key == SDLK_SPACE:
+            player_xindex = (int)(player.pos[0] // 68)
+            player_yindex = (int)((player.pos[1] - 20) // 82)
+            if worldmap[current_map].portal[0].pos == (player_xindex, player_yindex):
+                mapchange(worldmap[current_map].portal[0].nextmap, worldmap[current_map].portal[0].nextpos)
+
     player.farmtile = farmtile
     player.farm_objects = bg_tile
     player.handle_event(e)
     farmtile = player.farmtile
-    farm_objects = player.farm_objects
+    bg_tile = player.farm_objects
 
 def resume():
     global player
