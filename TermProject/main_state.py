@@ -85,10 +85,18 @@ class Tile_Object:
         self.bgpos = bg.to_screen((68 * self.pos[0], 82 * self.pos[1]))
         self.tile_object = gfw.image.load(gobj.RES_DIR + '/object/springobjects.ko-KR.png')
         self.crop_object = gfw.image.load(gobj.RES_DIR + '/object/crops.png')
+        self.grow = 0
 
     def deleteobject(self):
         self.tile = 0
         self.col = False
+
+    def setgrowmaxlevel(self, maxlevel):
+        self.maxlevel = maxlevel
+
+    def growup(self):
+        if self.grow < self.maxlevel:
+            self.grow += 1
 
     def draw(self):
         if self.tile == 1:
@@ -98,7 +106,13 @@ class Tile_Object:
         elif self.tile == 3:
             self.tile_object.clip_draw_to_origin(16 * 7, 16 * 21, 16, 16, *self.bgpos, 68, 82)
         elif self.tile == 4:
-            self.crop_object.clip_draw_to_origin(1, 672-33, 16, 16, *self.bgpos, 68, 82)
+            self.crop_object.clip_draw_to_origin(16 * self.grow, 672-29, 16, 16, *self.bgpos, 68, 82)
+        elif self.tile == 5:
+            self.crop_object.clip_draw_to_origin(128 + 16 * self.grow, 672 - 93, 16, 20, *self.bgpos, 68, 82)
+        elif self.tile == 6:
+            self.crop_object.clip_draw_to_origin(16 * self.grow, 672 - 64, 16, 16, *self.bgpos, 68, 82)
+        elif self.tile == 7:
+            self.crop_object.clip_draw_to_origin(128 + 16 * self.grow, 672 - 61, 16, 18, *self.bgpos, 68, 82)
 
     def get_bb(self):
         return self.bgpos[0], self.bgpos[1], self.bgpos[0] + 68, self.bgpos[1] + 82
@@ -252,7 +266,7 @@ def update():
     gfw.world.update()
 
 def draw():
-    global bg,homy
+    global bg
     gfw.world.draw()
 
     for y in range(FARM_YBOARD):
@@ -264,7 +278,7 @@ def draw():
     # gobj.draw_collision_box()
     
 def handle_event(e):
-    global player, farmtile, bg_tile, farm_objects
+    global player, farmtile, bg_tile, farm_objects, game_time
     # prev_dx = boy.dx
     if e.type == SDL_QUIT:
         gfw.quit()
@@ -278,6 +292,14 @@ def handle_event(e):
         elif e.key == SDLK_k:
             player.set_pause()
             shpstatchange()
+
+        elif e.key == SDLK_z:
+            game_time.nextday()
+            for y in range(FARM_YBOARD):
+                for x in range(FARM_XBOARD):
+                    if farmtile[y][x] == 2 and bg_tile[y][x].tile in range(4, 8):
+                        farmtile[y][x] = 1
+                        bg_tile[y][x].growup()
 
         elif e.key == SDLK_a:
             player_xindex = (int)(player.pos[0] // 68)

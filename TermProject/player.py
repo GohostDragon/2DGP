@@ -341,7 +341,28 @@ class Player:
                 if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
                     if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
                         self.farm_objects[self.y_tile][self.x_tile].tile = 4
-                        self.farm_objects[self.y_tile][self.x_tile].col = False
+                        self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(5)
+                        self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
+
+            elif self.equip == 7:
+                if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
+                    if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
+                        self.farm_objects[self.y_tile][self.x_tile].tile = 5
+                        self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(5)
+                        self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
+
+            elif self.equip == 8:
+                if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
+                    if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
+                        self.farm_objects[self.y_tile][self.x_tile].tile = 6
+                        self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(6)
+                        self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
+
+            elif self.equip == 9:
+                if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
+                    if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
+                        self.farm_objects[self.y_tile][self.x_tile].tile = 7
+                        self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(6)
                         self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
 
         elif e.type == SDL_MOUSEBUTTONUP:
