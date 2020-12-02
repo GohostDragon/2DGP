@@ -62,6 +62,14 @@ class Shop_UI:
                         self.item_image.clip_draw(16 * 18, 16 * 14, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
                     elif self.inven[y][x].item == 9:
                         self.item_image.clip_draw(16 * 19, 16 * 14, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 10:
+                        self.item_image.clip_draw(16 * 0, 16 * 32, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 11:
+                        self.item_image.clip_draw(16 * 10, 16 * 23, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 12:
+                        self.item_image.clip_draw(16 * 22, 16 * 26, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 13:
+                        self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
 
                     if self.inven[y][x].item > 5:
                         self.font.draw(964 + 64 * x + 10, posy - 25, str(self.inven[y][x].count), (255, 255, 255))
@@ -85,6 +93,14 @@ class Shop_UI:
                     self.item_image.clip_draw(16 * 18, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
                 elif self.select == 9:
                     self.item_image.clip_draw(16 * 19, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 10:
+                    self.item_image.clip_draw(16 * 0, 16 * 32, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 11:
+                    self.item_image.clip_draw(16 * 10, 16 * 23, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 12:
+                    self.item_image.clip_draw(16 * 22, 16 * 26, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 13:
+                    self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
 
     def seekinven(self, item):
         for y in range(3):

@@ -170,11 +170,30 @@ class Player:
                 self.item_image.clip_draw(16*18, 16*14, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
             elif self.inven[0][i].item == 9:
                 self.item_image.clip_draw(16*19, 16*14, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
+            elif self.inven[0][i].item == 10:
+                self.item_image.clip_draw(16*0, 16*32, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
+            elif self.inven[0][i].item == 11:
+                self.item_image.clip_draw(16*10, 16*23, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
+            elif self.inven[0][i].item == 12:
+                self.item_image.clip_draw(16*22, 16*26, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
+            elif self.inven[0][i].item == 13:
+                self.item_image.clip_draw(16*0, 16*25, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
 
             if self.inven[0][i].item > 5:
                 self.font.draw(604 + 64 * i + 10, invenui_y - 25, str(self.inven[0][i].count), (255, 255, 255))
         self.drawitemrec()
         draw_rectangle(*self.get_bb())
+
+    def seekinven(self, item):
+        for y in range(3):
+            for x in range(12):
+                if self.inven[y][x].item == item:
+                    return x,y
+
+        for y in range(3):
+            for x in range(12):
+                if self.inven[y][x].item == 0:
+                    return x,y
 
     def get_bb(self):
         # pos = self.bg.to_screen(self.pos)
@@ -295,75 +314,86 @@ class Player:
                 self.x_tile = player_xindex
                 self.y_tile = player_yindex - 1
 
-            if self.equip in range(1, 6) and self.state == Player.RUNNING and self.fmax == 1:
-                self.equip = self.inven[0][(self.iven_pos[0] - 573) // 64].item
-                self.state = self.equip
-                #self.tool_effect_sound[self.state-1].play()
+            if e.button == SDL_BUTTON_LEFT:
+                if self.equip in range(1, 6) and self.state == Player.RUNNING and self.fmax == 1:
+                    self.equip = self.inven[0][(self.iven_pos[0] - 573) // 64].item
+                    self.state = self.equip
+                    #self.tool_effect_sound[self.state-1].play()
 
-                if self.equip == 1:
-                    if self.action == 1:
+                    if self.equip == 1:
+                        if self.action == 1:
+                            self.fidex = 0
+                            self.fmax = 4
+                        else:
+                            self.fidex = 0
+                            self.fmax = 5
+
+                    elif self.equip == 2:
+                        if self.action == 0:
+                            self.fidex = 0
+                            self.fmax = 4
+                        else:
+                            self.fidex = 0
+                            self.fmax = 5
+
+
+                    elif self.equip == 3:
+                        if self.action == 1:
+                            self.fidex = 0
+                            self.fmax = 4
+                        else:
+                            self.fidex = 0
+                            self.fmax = 5
+
+                    elif self.equip == 4:
+                        if self.action == 2:
+                            self.fidex = 0
+                            self.fmax = 5
+                        else:
+                            self.fidex = 0
+                            self.fmax = 7
+
+                    elif self.equip == 5:
                         self.fidex = 0
-                        self.fmax = 4
-                    else:
-                        self.fidex = 0
-                        self.fmax = 5
+                        self.fmax = 3
 
-                elif self.equip == 2:
-                    if self.action == 0:
-                        self.fidex = 0
-                        self.fmax = 4
-                    else:
-                        self.fidex = 0
-                        self.fmax = 5
+                if self.equip == 6:
+                    if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
+                        if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
+                            self.farm_objects[self.y_tile][self.x_tile].tile = 4
+                            self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(5)
+                            self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
+
+                elif self.equip == 7:
+                    if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
+                        if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
+                            self.farm_objects[self.y_tile][self.x_tile].tile = 5
+                            self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(5)
+                            self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
+
+                elif self.equip == 8:
+                    if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
+                        if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
+                            self.farm_objects[self.y_tile][self.x_tile].tile = 6
+                            self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(6)
+                            self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
+
+                elif self.equip == 9:
+                    if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
+                        if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
+                            self.farm_objects[self.y_tile][self.x_tile].tile = 7
+                            self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(6)
+                            self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
+
+            elif e.button == SDL_BUTTON_RIGHT:
+                if self.farm_objects[self.y_tile][self.x_tile].tile in range(4, 8):
+                    if self.farm_objects[self.y_tile][self.x_tile].grow == self.farm_objects[self.y_tile][self.x_tile].maxlevel:
+                        harvest = self.farm_objects[self.y_tile][self.x_tile].tile + 6
+                        ix, iy = self.seekinven(harvest)
+                        self.inven[iy][ix].giveItem(harvest, 1)
+                        self.farm_objects[self.y_tile][self.x_tile].tile = 0
 
 
-                elif self.equip == 3:
-                    if self.action == 1:
-                        self.fidex = 0
-                        self.fmax = 4
-                    else:
-                        self.fidex = 0
-                        self.fmax = 5
-
-                elif self.equip == 4:
-                    if self.action == 2:
-                        self.fidex = 0
-                        self.fmax = 5
-                    else:
-                        self.fidex = 0
-                        self.fmax = 7
-
-                elif self.equip == 5:
-                    self.fidex = 0
-                    self.fmax = 3
-
-            if self.equip == 6:
-                if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
-                    if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
-                        self.farm_objects[self.y_tile][self.x_tile].tile = 4
-                        self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(5)
-                        self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
-
-            elif self.equip == 7:
-                if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
-                    if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
-                        self.farm_objects[self.y_tile][self.x_tile].tile = 5
-                        self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(5)
-                        self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
-
-            elif self.equip == 8:
-                if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
-                    if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
-                        self.farm_objects[self.y_tile][self.x_tile].tile = 6
-                        self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(6)
-                        self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
-
-            elif self.equip == 9:
-                if self.farmtile[self.y_tile][self.x_tile] == 1 or self.farmtile[self.y_tile][self.x_tile] == 2:
-                    if self.farm_objects[self.y_tile][self.x_tile].tile == 0:
-                        self.farm_objects[self.y_tile][self.x_tile].tile = 7
-                        self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(6)
-                        self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
 
         elif e.type == SDL_MOUSEBUTTONUP:
             pass
