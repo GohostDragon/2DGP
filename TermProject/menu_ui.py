@@ -79,7 +79,7 @@ class Menu_UI:
                         self.font.draw(604 + 64 * x + 10, posy - 25, str(self.inven[y][x].count), (255, 255, 255))
 
             if self.capture:
-                if self.select == 1:
+                if self.select == 1:#도구
                     self.item_tool.clip_draw(79, 384 - (64 * 0 + 48), 17, 17, *self.mouse_pos, 17 * 4, 17 * 4)
                 elif self.select == 2:
                     self.item_tool.clip_draw(79, 384 - (64 * 1 + 48), 17, 17, *self.mouse_pos, 17 * 4, 17 * 4)
@@ -89,7 +89,7 @@ class Menu_UI:
                     self.item_tool.clip_draw(79, 384 - (64 * 3 + 48), 17, 17, *self.mouse_pos, 17 * 4, 17 * 4)
                 elif self.select == 5:
                     self.item_weapon.clip_draw(7 * 16, 16, 16, 16, *self.mouse_pos, 17 * 4, 17 * 4)
-                elif self.select == 6:
+                elif self.select == 6:#씨앗
                     self.item_image.clip_draw(16 * 16, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
                 elif self.select == 7:
                     self.item_image.clip_draw(16 * 17, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
@@ -97,7 +97,7 @@ class Menu_UI:
                     self.item_image.clip_draw(16 * 18, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
                 elif self.select == 9:
                     self.item_image.clip_draw(16 * 19, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
-                elif self.select == 10:
+                elif self.select == 10:#농작물
                     self.item_image.clip_draw(16 * 0, 16 * 32, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
                 elif self.select == 11:
                     self.item_image.clip_draw(16 * 10, 16 * 23, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
@@ -105,6 +105,14 @@ class Menu_UI:
                     self.item_image.clip_draw(16 * 22, 16 * 26, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
                 elif self.select == 13:
                     self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                '''
+                elif self.select == 14:#풀, 나무, 돌
+                    self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 15:
+                    self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 16:
+                    self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                '''
 
 
     def handle_event(self, e):

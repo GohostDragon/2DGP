@@ -121,6 +121,7 @@ class Player:
         self.farm_objects = []
 
         self.current_map = HOME
+        self.health = 160
 
     def drawitemrec(self):
         draw_rectangle(*self.iven_pos, self.iven_pos[0] + 65, self.iven_pos[1] + 70)
@@ -182,6 +183,11 @@ class Player:
             if self.inven[0][i].item > 5:
                 self.font.draw(604 + 64 * i + 10, invenui_y - 25, str(self.inven[0][i].count), (255, 255, 255))
         self.drawitemrec()
+
+        self.ui_image[1].clip_draw(255, 2256 - 463, 13, 56, 1880, 170, 13*4, 56*4)
+
+        self.ui_image[1].clip_draw_to_origin(683, 2256 - 2084, 7, 4, 1868, 63, 26, self.health)
+
         draw_rectangle(*self.get_bb())
 
     def seekinven(self, item):
@@ -315,9 +321,13 @@ class Player:
                 self.y_tile = player_yindex - 1
 
             if e.button == SDL_BUTTON_LEFT:
-                if self.equip in range(1, 6) and self.state == Player.RUNNING and self.fmax == 1:
+                self.mouse_pos = (e.x, get_canvas_height() - 1 - e.y)
+                if self.equip in range(1, 6) and self.state == Player.RUNNING and self.fmax == 1 and self.health > 0:
                     self.equip = self.inven[0][(self.iven_pos[0] - 573) // 64].item
                     self.state = self.equip
+                    self.health -= 5
+                    if self.health < 0:
+                        self.health = 0
                     #self.tool_effect_sound[self.state-1].play()
 
                     if self.equip == 1:
