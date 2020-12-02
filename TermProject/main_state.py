@@ -107,7 +107,9 @@ class Tile_Object:
         self.bgpos = bg.to_screen((68 * self.pos[0], 82 * self.pos[1]))
 
 def mapchange(map, pos):
-    global current_map, player, bg, bg_tile
+    global current_map, player, bg, bg_tile, mapdatalist
+    mapno = worldmap[current_map].data
+    mapdatalist[mapno] = player.farm_objects
 
     gfw.world.clear_at(gfw.layer.object)
 
@@ -118,15 +120,13 @@ def mapchange(map, pos):
     gfw.world.remove(bg)
     bg = worldmap[current_map].bg
 
-    f = open(worldmap[current_map].data, "rb")
-    data_object = pickle.load(f)
-    f.close()
+    mapno = worldmap[current_map].data
 
     bg_tile = []
     for y in range(FARM_YBOARD):
         bg_tile.append([])
         for x in range(FARM_XBOARD):
-            bg_tile[y].append(Tile_Object(data_object[y][x], bg))
+            bg_tile[y].append(Tile_Object(mapdatalist[mapno][y][x], bg))
 
     for y in range(FARM_YBOARD):
         for x in range(FARM_XBOARD):
@@ -156,13 +156,13 @@ def enter():
     gfw.world.init(['bg','tile', 'object', 'player','ui'])
     #Zombie.load_all_images()
 
-    global player,bg ,homy, farmtile, tile, bg_tile, tile_object, bg_music, current_map, worldmap
+    global player,bg ,homy, farmtile, tile, bg_tile, tile_object, bg_music, current_map, worldmap, mapdatalist
 
     worldmap = []
-    worldmap.append(Map(InBackground('home.jpg'),'Home_Tile.pickle'))
-    worldmap.append(Map(FixedBackground('farm.jpg'), 'Farm_Tile.pickle'))
-    worldmap.append(Map(FixedBackground('town.jpg'), 'Town_Tile.pickle'))
-    worldmap.append(Map(InBackground('shop.jpg'),'Shop_Tile.pickle'))
+    worldmap.append(Map(InBackground('home.jpg'), HOME))
+    worldmap.append(Map(FixedBackground('farm.jpg'), FARM))
+    worldmap.append(Map(FixedBackground('town.jpg'), TOWN))
+    worldmap.append(Map(InBackground('shop.jpg'), SHOP))
 
     worldmap[HOME].addPortal((11, 2), FARM, (4328.08, 3441.80), SDLK_DOWN)
     worldmap[FARM].addPortal((63, 41), HOME, (784.05, 249.96), SDLK_UP)
@@ -198,18 +198,29 @@ def enter():
     gfw.world.add(gfw.layer.bg, bg)
     bg.target = player
 
-    try:
-        f = open('HOME_Tile.pickle', "rb")
-        data_object = pickle.load(f)
-        f.close()
-    except:
-        print("No Map file")
+    mapdatalist = []
+
+    f = open('HOME_Tile.pickle', "rb")
+    mapdatalist.append(pickle.load(f))
+    f.close()
+
+    f = open('Farm_Tile.pickle', "rb")
+    mapdatalist.append(pickle.load(f))
+    f.close()
+
+    f = open('Town_Tile.pickle', "rb")
+    mapdatalist.append(pickle.load(f))
+    f.close()
+
+    f = open('Shop_Tile.pickle', "rb")
+    mapdatalist.append(pickle.load(f))
+    f.close()
 
     bg_tile = []
     for y in range(FARM_YBOARD):
         bg_tile.append([])
         for x in range(FARM_XBOARD):
-            bg_tile[y].append(Tile_Object(data_object[y][x], bg))
+            bg_tile[y].append(Tile_Object(mapdatalist[HOME][y][x], bg))
 
     for y in range(FARM_YBOARD):
         for x in range(FARM_XBOARD):
@@ -295,12 +306,17 @@ def resume():
         player.inven = menu_state.inven
     elif whostate == SHOP_STATE:
         player.inven = shop_state.inven
+        main_ui.money = shop_state.money
+
 
 def pause():
     pass
 
 def exit():
-    pass
+    global bg_music
+    bg_music.stop()
+    del bg_music
+
 
 if __name__ == '__main__':
     gfw.run_main()

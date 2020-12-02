@@ -60,6 +60,12 @@ class Menu_UI:
                         self.item_weapon.clip_draw(7*16, 16, 16, 16, 604 + 64 * x, posy, 17 * 4, 17 * 4)
                     elif self.inven[y][x].item == 6:
                         self.item_image.clip_draw(16 * 16, 16 * 14, 16, 16, 604 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 7:
+                        self.item_image.clip_draw(16 * 17, 16 * 14, 16, 16, 604 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 8:
+                        self.item_image.clip_draw(16 * 18, 16 * 14, 16, 16, 604 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 9:
+                        self.item_image.clip_draw(16 * 19, 16 * 14, 16, 16, 604 + 64 * x, posy, 17 * 3, 17 * 3)
 
                     if self.inven[y][x].item > 5:
                         self.font.draw(604 + 64 * x + 10, posy - 25, str(self.inven[y][x].count), (255, 255, 255))
@@ -77,6 +83,12 @@ class Menu_UI:
                     self.item_weapon.clip_draw(7 * 16, 16, 16, 16, *self.mouse_pos, 17 * 4, 17 * 4)
                 elif self.select == 6:
                     self.item_image.clip_draw(16 * 16, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 7:
+                    self.item_image.clip_draw(16 * 17, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 8:
+                    self.item_image.clip_draw(16 * 18, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 9:
+                    self.item_image.clip_draw(16 * 19, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
 
 
     def handle_event(self, e):

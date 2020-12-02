@@ -7,7 +7,7 @@ class Shop_UI:
     bullets = []
     trashcan = []
 
-    def __init__(self, inven):
+    def __init__(self, inven, money):
         self.image = gfw.image.load(gobj.RES_DIR + '/shop_ui.png')
 
         self.selectui_image = gfw.image.load(gobj.RES_DIR + '/Cursors.ko-KR.png')
@@ -24,6 +24,8 @@ class Shop_UI:
         self.select = 0
 
         self.selectui = 0
+
+        self.money = money
 
     def reset(self):
         pass
@@ -54,6 +56,12 @@ class Shop_UI:
                         self.item_weapon.clip_draw(7*16, 16, 16, 16, 964 + 64 * x, posy, 17 * 4, 17 * 4)
                     elif self.inven[y][x].item == 6:
                         self.item_image.clip_draw(16 * 16, 16 * 14, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 7:
+                        self.item_image.clip_draw(16 * 17, 16 * 14, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 8:
+                        self.item_image.clip_draw(16 * 18, 16 * 14, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 9:
+                        self.item_image.clip_draw(16 * 19, 16 * 14, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
 
                     if self.inven[y][x].item > 5:
                         self.font.draw(964 + 64 * x + 10, posy - 25, str(self.inven[y][x].count), (255, 255, 255))
@@ -71,54 +79,72 @@ class Shop_UI:
                     self.item_weapon.clip_draw(7 * 16, 16, 16, 16, *self.mouse_pos, 17 * 4, 17 * 4)
                 elif self.select == 6:
                     self.item_image.clip_draw(16 * 16, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 7:
+                    self.item_image.clip_draw(16 * 17, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 8:
+                    self.item_image.clip_draw(16 * 18, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 9:
+                    self.item_image.clip_draw(16 * 19, 16 * 14, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
 
+    def seekinven(self, item):
+        for y in range(3):
+            for x in range(12):
+                if self.inven[y][x].item == item:
+                    return x,y
+
+        for y in range(3):
+            for x in range(12):
+                if self.inven[y][x].item == 0:
+                    return x,y
 
     def handle_event(self, e):
         if e.type == SDL_MOUSEBUTTONDOWN:
             self.mouse_pos = (e.x, get_canvas_height() - 1 - e.y)
             print(self.mouse_pos)
-            for i in range(3):
-                if i != self.selectui:
-                    if 600 + (i * 16 * 4) - 16 * 2< self.mouse_pos[0] < 600 + (i * 16 * 4) + 16 * 4 and 850 - 16*2< self.mouse_pos[1] < 850 - 16*2 +16*4:
-                        self.selectui = i
 
+            for y in range(3):
+                for x in range(12):
+                    if y == 0:
+                        posy = 346
+                    elif y == 1:
+                        posy = 264
+                    else:
+                        posy = 196
+                    if 930 + 17 * 4 * x < self.mouse_pos[0] < 930 + 17 * 4 * (x+1) and posy - 34 < self.mouse_pos[
+                        1] < posy - 34 + 17 * 4:
+                        #self.inven[y][x].item = 0
+                        print(self.inven[y][x].item)
+                        self.selectposx = x
+                        self.selectposy = y
 
-            if self.selectui == 0:
-                if self.capture == False:
-                    for y in range(3):
-                        for x in range(12):
-                            if y == 0:
-                                posy = 760
-                            elif y == 1:
-                                posy = 680
-                            else:
-                                posy = 614
-                            if 570 + x * 17 *4 < self.mouse_pos[0] < 570 + (x+1) * 17 *4 and posy - 34 < self.mouse_pos[1] < posy - 34 + 17 * 4:
-                                self.capture = True
-                                self.select = self.inven[y][x].item
-                                self.inven[y][x].item = 0
-                                self.selectposx = x
-                                self.selectposy = y
+            for y in range(4):
+                if 700 < self.mouse_pos[0] < 1720 and 768-108*y < self.mouse_pos[
+                    1] < 849-108*y:
+                    if y == 0:
+                        price = 20
+                        if self.money >= price:
+                            self.money -= price
+                            ix, iy = self.seekinven(6)
+                            self.inven[iy][ix].giveItem(6, 1)
+                    elif y == 1:
+                        price = 60
+                        if self.money >= price:
+                            self.money -= price
+                            ix, iy = self.seekinven(7)
+                            self.inven[iy][ix].giveItem(7, 1)
+                    elif y == 2:
+                        price = 80
+                        if self.money >= price:
+                            self.money -= price
+                            ix, iy = self.seekinven(8)
+                            self.inven[iy][ix].giveItem(8, 1)
+                    elif y == 3:
+                        price = 50
+                        if self.money >= price:
+                            self.money -= price
+                            ix, iy = self.seekinven(9)
+                            self.inven[iy][ix].giveItem(9, 1)
 
-                else:
-                    self.inven[self.selectposy][self.selectposx].item = self.select
-                    for y in range(3):
-                        for x in range(12):
-                            if y == 0:
-                                posy = 760
-                            elif y == 1:
-                                posy = 680
-                            else:
-                                posy = 614
-                            if 570 + x * 17 *4 < self.mouse_pos[0] < 570 + (x+1) * 17 *4 and posy - 34 < self.mouse_pos[1] < posy - 34 + 17 * 4:
-                                self.inven[y][x], self.inven[self.selectposy][self.selectposx] = self.inven[self.selectposy][self.selectposx], self.inven[y][x]
-
-                    self.capture = False
-                    self.select = 0
-
-        elif e.type == SDL_MOUSEMOTION:
-            if self.capture == True:
-                self.mouse_pos = (e.x, get_canvas_height() - 1 - e.y)
 
 
     def update(self):

@@ -9,7 +9,7 @@ money = 0
 
 def build_world():
     global shop_ui
-    shop_ui = Shop_UI(inven)
+    shop_ui = Shop_UI(inven, money)
     gfw.world.add(gfw.layer.ui, shop_ui)
 
     global main_ui
@@ -32,6 +32,7 @@ def draw():
 
 def handle_event(e):
     # prev_dx = boy.dx
+    global money
     if e.type == SDL_QUIT:
         return gfw.quit()
     elif e.type == SDL_KEYDOWN:
@@ -39,6 +40,8 @@ def handle_event(e):
             return gfw.pop()
 
     shop_ui.handle_event(e)
+    money = shop_ui.money
+    main_ui.money = money
 
 
 def handle_mouse(e):

@@ -14,6 +14,10 @@ class Inven:
         self.item = item
         self.count = count
 
+    def giveItem(self, item, count):
+        self.item = item
+        self.count += count
+
     def useItem(self):
         if self.item not in range(1, 6) and self.count > 0:
             self.count -= 1
@@ -160,6 +164,12 @@ class Player:
                 self.weapon_image.clip_draw(7*16, 16, 16, 16, 604 + 64 * i, invenui_y, 17 * 3, 17 * 3)
             elif self.inven[0][i].item == 6:
                 self.item_image.clip_draw(16*16, 16*14, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
+            elif self.inven[0][i].item == 7:
+                self.item_image.clip_draw(16*17, 16*14, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
+            elif self.inven[0][i].item == 8:
+                self.item_image.clip_draw(16*18, 16*14, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
+            elif self.inven[0][i].item == 9:
+                self.item_image.clip_draw(16*19, 16*14, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
 
             if self.inven[0][i].item > 5:
                 self.font.draw(604 + 64 * i + 10, invenui_y - 25, str(self.inven[0][i].count), (255, 255, 255))
@@ -198,7 +208,8 @@ class Player:
             if self.current_map == FARM:
                 if self.equip == 1:
                     if self.farm_objects[self.y_tile][self.x_tile].tile == 0 and self.farm_objects[self.y_tile][self.x_tile].col == False:
-                        self.farmtile[self.y_tile][self.x_tile] = 1
+                        if 32 <= self.x_tile <= 75 and 13 <= self.y_tile <= 38:
+                            self.farmtile[self.y_tile][self.x_tile] = 1
 
                 elif self.equip == 2:
                     if self.farm_objects[self.y_tile][self.x_tile].tile == 2:
