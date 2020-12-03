@@ -194,8 +194,8 @@ def enter():
     worldmap[TOWN].addPortal((0, 43), FARM, (5337.16, 3280.91), SDLK_LEFT)
     worldmap[TOWN].addPortal((0, 44), FARM, (5337.16, 3360.38), SDLK_LEFT)
 
-    worldmap[TOWN].addPortal((43, 40), SHOP, (850.17, 387.06), SDLK_UP)
-    worldmap[TOWN].addPortal((44, 40), SHOP, (850.17, 387.06), SDLK_UP)
+    worldmap[TOWN].addPortal((43, 40), SHOP, (814.25, 159.36), SDLK_UP)
+    worldmap[TOWN].addPortal((44, 40), SHOP, (814.25, 159.36), SDLK_UP)
 
     worldmap[TOWN].addPortal((0, 8), FOREST, (3144.10, 155.48), SDLK_UP)
     worldmap[TOWN].addPortal((0, 7), FOREST, (3144.10, 231.22), SDLK_UP)
@@ -296,8 +296,34 @@ def enter():
     game_time = Game_Time()
     gfw.world.add(gfw.layer.ui, game_time)
 
+    global sleep_image, sleeping
+    sleep_image = gfw.image.load(gobj.RES_DIR + '/logo/loading.jpg')
+    sleeping = 0
+
+    global font
+    font = gfw.font.load(gobj.RES_DIR + '/ENCR10B.TTF', 30)
+
 def update():
     gfw.world.update()
+
+    global sleeping, bg_music
+    if sleeping > 1:
+        sleeping -= 1
+    elif sleeping == 1:
+        bg_music.stop()
+        bg_music = load_music(gobj.RES_BG + '1-02 Cloud Country.mp3')
+        bg_music.repeat_play()
+
+        global game_time, farmtile, bg_tile, player
+        game_time.nextday()
+        player.health = 160
+        for y in range(FARM_YBOARD):
+            for x in range(FARM_XBOARD):
+                if farmtile[y][x] == 2 and bg_tile[y][x].tile in range(4, 8):
+                    farmtile[y][x] = 1
+                    bg_tile[y][x].growup()
+
+        sleeping = 0
 
 def draw():
     global bg
@@ -309,6 +335,10 @@ def draw():
             maxrec = bg.to_screen((68 * (x+1), 82* (y+1)))
             draw_rectangle(*minrec,*maxrec)
 
+    if sleeping > 0:
+        global font
+        sleep_image.draw(canvas_width//2, canvas_height//2)
+        font.draw(50, 40, 'Sleep..', (0, 0, 0))
     # gobj.draw_collision_box()
     
 def handle_event(e):
@@ -349,6 +379,19 @@ def handle_event(e):
                 if worldmap[current_map].portal[i].pos == (player_xindex, player_yindex):
                     mapchange(worldmap[current_map].portal[i].nextmap, worldmap[current_map].portal[i].nextpos)
                     break
+
+            if current_map == HOME:
+                if 17 <= player_xindex <= 18 and 3 <= player_yindex <= 4:
+                    global bg_music, sleeping
+                    bg_music.stop()
+                    bg_music = load_music(gobj.RES_BG+'1-18 Load Game.mp3')
+                    bg_music.repeat_play()
+                    sleeping = 50
+                    
+            elif current_map == SHOP:
+                if 9 <= player_xindex <= 10 and player_yindex == 8:
+                    player.set_pause()
+                    shpstatchange()
 
     player.farmtile = farmtile
     player.farm_objects = bg_tile
