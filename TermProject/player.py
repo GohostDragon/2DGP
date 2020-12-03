@@ -103,6 +103,7 @@ class Player:
         self.mag = 1
         self.mirror = False
 
+        self.dpos = (0, 0)
         self.iven_pos = (573,63)
 
         self.font = gfw.font.load(gobj.RES_DIR + '/BMJUA_ttf.ttf', 20)

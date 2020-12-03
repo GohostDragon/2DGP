@@ -102,6 +102,10 @@ IMAGE_FILES = [
     "res/map/town.jpg",
     "res/map/home.jpg",
     "res/map/shop.jpg",
+    "res/map/coopmap.jpg",
+    "res/map/barnmap.jpg",
+    "res/map/forest.jpg",
+    "res/map/animalshop.jpg",
 ]
 
 FONT_PAIRS = [

@@ -198,8 +198,8 @@ def enter():
     worldmap[TOWN].addPortal((0, 43), FARM, (5337.16, 3280.91), SDLK_LEFT)
     worldmap[TOWN].addPortal((0, 44), FARM, (5337.16, 3360.38), SDLK_LEFT)
 
-    worldmap[TOWN].addPortal((43, 40), SHOP, (842.17, 253.06), SDLK_UP)
-    worldmap[TOWN].addPortal((44, 40), SHOP, (842.17, 253.06), SDLK_UP)
+    worldmap[TOWN].addPortal((43, 40), SHOP, (850.17, 387.06), SDLK_UP)
+    worldmap[TOWN].addPortal((44, 40), SHOP, (850.17, 387.06), SDLK_UP)
 
     worldmap[TOWN].addPortal((0, 8), FOREST, (3144.10, 155.48), SDLK_UP)
     worldmap[TOWN].addPortal((0, 7), FOREST, (3144.10, 231.22), SDLK_UP)
@@ -207,7 +207,8 @@ def enter():
     worldmap[TOWN].addPortal((0, 5), FOREST, (3144.10, 231.22), SDLK_UP)
     worldmap[TOWN].addPortal((0, 4), FOREST, (3144.10, 330.76), SDLK_UP)
 
-    worldmap[SHOP].addPortal((12, 2), SHOP, (2957.37, 3371.08), SDLK_DOWN)
+    worldmap[SHOP].addPortal((11, 1), TOWN, (2957.37, 3371.08), SDLK_DOWN)
+    worldmap[SHOP].addPortal((12, 1), TOWN, (2957.37, 3371.08), SDLK_DOWN)
 
     worldmap[COOP].addPortal((11, 3), FARM, (3567.72, 3433.51), SDLK_DOWN)
     worldmap[BARN].addPortal((16, 1), FARM, (3027.83, 3434.74), SDLK_DOWN)
@@ -371,6 +372,25 @@ def handle_event(e):
     player.handle_event(e)
     farmtile = player.farmtile
     bg_tile = player.farm_objects
+
+    if current_map == FARM:
+        if 5360 <= player.pos[0]:
+            mapchange(TOWN, (40.08, 3683.43))
+        elif player.pos[1] <= 0:
+            mapchange(FOREST, (504.02, 1713.75))
+
+    elif current_map == TOWN:
+        if player.pos[0] <= 0:
+            if player.pos[1] > 3000:
+                mapchange(FARM, (5337.16, 3280.91))
+            else:
+                mapchange(FOREST, (3144.10, 231.22))
+
+    elif current_map == FOREST:
+        if 3169 <= player.pos[0]:
+            mapchange(TOWN, (26.56, 483.82))
+        elif player.pos[1] >= 1718:
+            mapchange(FARM, (2754.34, 85.05))
 
 def resume():
     global player

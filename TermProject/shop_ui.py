@@ -126,12 +126,9 @@ class Shop_UI:
                         posy = 264
                     else:
                         posy = 196
-                    if 930 + 17 * 4 * x < self.mouse_pos[0] < 930 + 17 * 4 * (x+1) and posy - 34 < self.mouse_pos[
-                        1] < posy - 34 + 17 * 4:
-                        #self.inven[y][x].item = 0
-                        print(self.inven[y][x].item)
-                        self.selectposx = x
-                        self.selectposy = y
+                    if 930 + 64 * x < self.mouse_pos[0] < 930 + 64 * x + 54 and posy - 34 < self.mouse_pos[1] < posy - 34 + 17 * 4:
+                        if self.inven[y][x].item not in range(5):
+                            self.inven[y][x].useItem()
 
             for y in range(4):
                 if 700 < self.mouse_pos[0] < 1720 and 768-108*y < self.mouse_pos[

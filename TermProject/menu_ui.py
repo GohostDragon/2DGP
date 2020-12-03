@@ -118,7 +118,7 @@ class Menu_UI:
     def handle_event(self, e):
         if e.type == SDL_MOUSEBUTTONDOWN:
             self.mouse_pos = (e.x, get_canvas_height() - 1 - e.y)
-
+            print(self.mouse_pos)
             for i in range(3):
                 if i != self.selectui:
                     if 600 + (i * 16 * 4) - 16 * 2< self.mouse_pos[0] < 600 + (i * 16 * 4) + 16 * 4 and 850 - 16*2< self.mouse_pos[1]  < 850 - 16*2 +16*4:
@@ -135,7 +135,7 @@ class Menu_UI:
                                 posy = 680
                             else:
                                 posy = 614
-                            if 570 + x * 17 *4 < self.mouse_pos[0] < 570 + (x+1) * 17 *4 and posy - 34 < self.mouse_pos[1] < posy - 34 + 17 * 4:
+                            if 570 + x * 64 < self.mouse_pos[0] < 570 + x * 64+54 and posy - 34 < self.mouse_pos[1] < posy - 34 + 17 * 4:
                                 self.capture = True
                                 self.select = self.inven[y][x].item
                                 self.inven[y][x].item = 0
@@ -152,7 +152,7 @@ class Menu_UI:
                                 posy = 680
                             else:
                                 posy = 614
-                            if 570 + x * 17 *4 < self.mouse_pos[0] < 570 + (x+1) * 17 *4 and posy - 34 < self.mouse_pos[1] < posy - 34 + 17 * 4:
+                            if 570 + x * 64 < self.mouse_pos[0] < 570 + x * 64 + 54 and posy - 34 < self.mouse_pos[1] < posy - 34 + 17 * 4:
                                 self.inven[y][x], self.inven[self.selectposy][self.selectposx] = self.inven[self.selectposy][self.selectposx], self.inven[y][x]
 
                     self.capture = False
