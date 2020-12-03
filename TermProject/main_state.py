@@ -23,7 +23,7 @@ SAVE_FILENAME = 'zombies.pickle'
 FARM_XBOARD = 80
 FARM_YBOARD = 65
 
-HOME, FARM, TOWN, SHOP = range(4)
+HOME, FARM, TOWN, SHOP, COOP, BARN, FOREST, ANIMALSHOP = range(8)
 MENU_STATE, SHOP_STATE = range(2)
 
 whostate = 0
@@ -177,22 +177,55 @@ def enter():
     worldmap.append(Map(FixedBackground('farm.jpg'), FARM))
     worldmap.append(Map(FixedBackground('town.jpg'), TOWN))
     worldmap.append(Map(InBackground('shop.jpg'), SHOP))
+    worldmap.append(Map(InBackground('coopmap.jpg'), COOP))
+    worldmap.append(Map(InBackground('barnmap.jpg'), BARN))
+    worldmap.append(Map(FixedBackground('forest.jpg'), FOREST))
+    worldmap.append(Map(InBackground('animalshop.jpg'), ANIMALSHOP))
 
     worldmap[HOME].addPortal((11, 2), FARM, (4328.08, 3441.80), SDLK_DOWN)
     worldmap[FARM].addPortal((63, 41), HOME, (784.05, 249.96), SDLK_UP)
-    worldmap[FARM].addPortal((78, 39), TOWN, (45.29, 4495.97), SDLK_RIGHT)
-    worldmap[FARM].addPortal((78, 40), TOWN, (45.29, 4584.28), SDLK_RIGHT)
-    worldmap[FARM].addPortal((78, 41), TOWN, (45.29, 4672.76), SDLK_RIGHT)
+    #worldmap[FARM].addPortal((78, 39), TOWN, (45.29, 4495.97), SDLK_RIGHT)
+    worldmap[FARM].addPortal((78, 39), TOWN, (40.08, 3597.50), SDLK_RIGHT)
+    worldmap[FARM].addPortal((78, 40), TOWN, (40.08, 3683.43), SDLK_RIGHT)
+    worldmap[FARM].addPortal((78, 41), TOWN, (40.08, 3683.43), SDLK_RIGHT)
 
-    worldmap[TOWN].addPortal((0, 54), FARM, (5337.16, 3280.91), SDLK_LEFT)
-    worldmap[TOWN].addPortal((0, 55), FARM, (5337.16, 3360.38), SDLK_LEFT)
-    worldmap[TOWN].addPortal((0, 56), FARM, (5337.16, 3443.38), SDLK_LEFT)
+    worldmap[FARM].addPortal((52, 41), COOP, (782.63, 323.72), SDLK_RIGHT)
+    worldmap[FARM].addPortal((44, 41), BARN, (1115.72, 173.34), SDLK_RIGHT)
 
-    worldmap[TOWN].addPortal((43, 52), SHOP, (842.17, 253.06), SDLK_UP)
-    worldmap[TOWN].addPortal((44, 52), SHOP, (842.17, 253.06), SDLK_UP)
+    worldmap[FARM].addPortal((39, 0), FOREST, (504.02, 1713.75), SDLK_RIGHT)
+    worldmap[FARM].addPortal((40, 0), FOREST, (444.88, 1713.75), SDLK_RIGHT)
 
-    worldmap[SHOP].addPortal((12, 2), SHOP, (2947.63, 4345.54), SDLK_DOWN)
+    worldmap[TOWN].addPortal((0, 43), FARM, (5337.16, 3280.91), SDLK_LEFT)
+    worldmap[TOWN].addPortal((0, 44), FARM, (5337.16, 3360.38), SDLK_LEFT)
 
+    worldmap[TOWN].addPortal((43, 40), SHOP, (842.17, 253.06), SDLK_UP)
+    worldmap[TOWN].addPortal((44, 40), SHOP, (842.17, 253.06), SDLK_UP)
+
+    worldmap[TOWN].addPortal((0, 8), FOREST, (3144.10, 155.48), SDLK_UP)
+    worldmap[TOWN].addPortal((0, 7), FOREST, (3144.10, 231.22), SDLK_UP)
+    worldmap[TOWN].addPortal((0, 6), FOREST, (3144.10, 231.22), SDLK_UP)
+    worldmap[TOWN].addPortal((0, 5), FOREST, (3144.10, 231.22), SDLK_UP)
+    worldmap[TOWN].addPortal((0, 4), FOREST, (3144.10, 330.76), SDLK_UP)
+
+    worldmap[SHOP].addPortal((12, 2), SHOP, (2957.37, 3371.08), SDLK_DOWN)
+
+    worldmap[COOP].addPortal((11, 3), FARM, (3567.72, 3433.51), SDLK_DOWN)
+    worldmap[BARN].addPortal((16, 1), FARM, (3027.83, 3434.74), SDLK_DOWN)
+
+    worldmap[FOREST].addPortal((25, 8), ANIMALSHOP, (800, 10), SDLK_DOWN)
+
+    worldmap[FOREST].addPortal((4, 20), FARM, (2694.14, 84.64), SDLK_DOWN)
+    worldmap[FOREST].addPortal((5, 20), FARM, (2694.14, 84.64), SDLK_DOWN)
+    worldmap[FOREST].addPortal((6, 20), FARM, (2694.14, 84.64), SDLK_DOWN)
+    worldmap[FOREST].addPortal((7, 20), FARM, (2754.34, 85.05), SDLK_DOWN)
+    worldmap[FOREST].addPortal((8, 20), FARM, (2754.34, 85.05), SDLK_DOWN)
+    worldmap[FOREST].addPortal((9, 20), FARM, (2754.34, 85.05), SDLK_DOWN)
+
+    worldmap[FOREST].addPortal((46, 3), TOWN, (26.56, 576.70), SDLK_DOWN)
+    worldmap[FOREST].addPortal((46, 2), TOWN, (26.56, 483.82), SDLK_DOWN)
+    worldmap[FOREST].addPortal((46, 1), TOWN, (26.56, 483.82), SDLK_DOWN)
+
+    worldmap[ANIMALSHOP].addPortal((11, 0), FOREST, (1734.62, 740.94), SDLK_DOWN)
 
     current_map = HOME
 
@@ -227,6 +260,23 @@ def enter():
     f.close()
 
     f = open('Shop_Tile.pickle', "rb")
+    mapdatalist.append(pickle.load(f))
+    f.close()
+
+#coop
+    f = open('Coop_Tile.pickle', "rb")
+    mapdatalist.append(pickle.load(f))
+    f.close()
+#barn
+    f = open('Barn_Tile.pickle', "rb")
+    mapdatalist.append(pickle.load(f))
+    f.close()
+#forest
+    f = open('Forest_Tile.pickle', "rb")
+    mapdatalist.append(pickle.load(f))
+    f.close()
+# animalshop
+    f = open('Animalshop_Tile.pickle', "rb")
     mapdatalist.append(pickle.load(f))
     f.close()
 
