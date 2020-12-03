@@ -3,11 +3,14 @@ import gfw
 import gobj
 from menu_ui import Menu_UI
 
+HOME, FARM, TOWN, SHOP, COOP, BARN, FOREST, ANIMALSHOP = range(8)
+
 inven = [[0] * 13 for i in range(3)]
+current_map = 0
 
 def build_world():
     global menu_ui
-    menu_ui = Menu_UI(inven)
+    menu_ui = Menu_UI(inven, current_map)
     gfw.world.add(gfw.layer.ui, menu_ui)
 
 

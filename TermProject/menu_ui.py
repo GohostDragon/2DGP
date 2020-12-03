@@ -3,11 +3,13 @@ from pico2d import *
 import gfw
 import gobj
 
+HOME, FARM, TOWN, SHOP, COOP, BARN, FOREST, ANIMALSHOP = range(8)
+
 class Menu_UI:
     bullets = []
     trashcan = []
 
-    def __init__(self, inven):
+    def __init__(self, inven, current_map):
         self.image = gfw.image.load(gobj.RES_DIR + '/menustate_ui1.png')
 
         self.selectui_image = gfw.image.load(gobj.RES_DIR + '/Cursors.ko-KR.png')
@@ -16,10 +18,16 @@ class Menu_UI:
         self.item_weapon = gfw.image.load(gobj.RES_DIR + '/weapons.png')
         self.item_image = gfw.image.load(gobj.RES_DIR + '/object/springobjects.ko-KR.png')
 
+        self.mapui = gfw.image.load(gobj.RES_DIR + '/mapui.jpg')
+        self.mapmark = gfw.image.load(gobj.RES_DIR + '/mapmark.png')
+
+        self.gameexit = gfw.image.load(gobj.RES_DIR + '/gameexit_ui.jpg')
+
         self.font = gfw.font.load(gobj.RES_DIR + '/BMJUA_ttf.ttf', 20)
 
         self.reset()
         self.inven = inven
+        self.current_map = current_map
         self.capture = False
         self.select = 0
 
@@ -31,12 +39,25 @@ class Menu_UI:
     def draw(self):
         if self.selectui == 0:
             self.image.draw(960, 540)
-
-        for i in range(3):
-            if i == self.selectui:
-                self.selectui_image.clip_draw(i*16, 2256 - 383, 16, 16, 600+(i*16*4), 850, 16 * 4, 16 * 4)
+        elif self.selectui == 1:
+            self.mapui.draw(960, 540)
+            if self.current_map in (HOME, FARM):
+                self.mapmark.draw(743, 606)
+            elif self.current_map in (FOREST, ANIMALSHOP):
+                self.mapmark.draw(776, 484)
             else:
-                self.selectui_image.clip_draw(i*16, 2256 - 383, 16, 16, 600+(i*16*4), 800 + 16 * 4, 16 * 4, 16 * 4)
+                self.mapmark.draw(1056, 537)
+
+        elif self.selectui == 2:
+            self.gameexit.draw(960, 540)
+
+
+        if self.selectui != 1:
+            for i in range(3):
+                if i == self.selectui:
+                    self.selectui_image.clip_draw(i*16, 2256 - 383, 16, 16, 600+(i*16*4), 850, 16 * 4, 16 * 4)
+                else:
+                    self.selectui_image.clip_draw(i*16, 2256 - 383, 16, 16, 600+(i*16*4), 800 + 16 * 4, 16 * 4, 16 * 4)
 
         if self.selectui == 0:
             for y in range(3):
@@ -157,6 +178,16 @@ class Menu_UI:
 
                     self.capture = False
                     self.select = 0
+            elif self.selectui == 1:
+                if 1501 < self.mouse_pos[0] < 1534 and 853 < self.mouse_pos[1] < 885:
+                    return gfw.pop()
+
+                if 1472 < self.mouse_pos[0] < 1518 and 202 < self.mouse_pos[1] < 251:
+                    self.selectui = 0
+
+            elif self.selectui == 2:
+                if 858 < self.mouse_pos[0] < 1059 and 460 < self.mouse_pos[1] < 547:
+                    return gfw.quit()
 
         elif e.type == SDL_MOUSEMOTION:
             if self.capture == True:

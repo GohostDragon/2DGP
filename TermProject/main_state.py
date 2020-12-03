@@ -2,7 +2,6 @@ import os.path
 import gfw
 from pico2d import *
 from player import Player
-from zombie import Zombie
 import gobj
 
 from background import *
@@ -16,10 +15,6 @@ import pickle
 canvas_width = 1920
 canvas_height = 1080
 
-SAVE_FILENAME = 'zombies.pickle'
-
-#FARM_XBOARD = 80
-#FARM_YBOARD = 65
 FARM_XBOARD = 80
 FARM_YBOARD = 65
 
@@ -156,6 +151,7 @@ def mapchange(map, pos):
 def start():
     global whostate
     menu_state.inven = player.inven
+    menu_state.current_map = current_map
     whostate = MENU_STATE
     gfw.push(menu_state)
 
@@ -170,7 +166,7 @@ def enter():
     gfw.world.init(['bg','tile', 'object', 'player','ui'])
     #Zombie.load_all_images()
 
-    global player,bg ,homy, farmtile, tile, bg_tile, tile_object, bg_music, current_map, worldmap, mapdatalist
+    global player, bg, farmtile, bg_tile, tile_object, bg_music, current_map, worldmap, mapdatalist
 
     worldmap = []
     worldmap.append(Map(InBackground('home.jpg'), HOME))
@@ -180,7 +176,7 @@ def enter():
     worldmap.append(Map(InBackground('coopmap.jpg'), COOP))
     worldmap.append(Map(InBackground('barnmap.jpg'), BARN))
     worldmap.append(Map(FixedBackground('forest.jpg'), FOREST))
-    worldmap.append(Map(InBackground('animalshop.jpg'), ANIMALSHOP))
+    worldmap.append(Map(FixedBackground('animalshop.jpg'), ANIMALSHOP))
 
     worldmap[HOME].addPortal((11, 2), FARM, (4328.08, 3441.80), SDLK_DOWN)
     worldmap[FARM].addPortal((63, 41), HOME, (784.05, 249.96), SDLK_UP)
@@ -236,9 +232,6 @@ def enter():
 
     player = Player()
     gfw.world.add(gfw.layer.player, player)
-
-    tile = Map_Tile()
-    gfw.world.add(gfw.layer.tile, tile)
 
     bg_music = load_music(gobj.RES_BG + '1-02 Cloud Country.mp3')
     bg_music.repeat_play()
@@ -302,16 +295,6 @@ def enter():
     global game_time
     game_time = Game_Time()
     gfw.world.add(gfw.layer.ui, game_time)
-
-    homy = gfw.image.load(gobj.RES_DIR + '/hoeDirt.png')
-
-def load():
-    if not os.path.isfile(SAVE_FILENAME):
-        return False
-
-    gfw.world.load(SAVE_FILENAME)
-    print('Loaded from:', SAVE_FILENAME)
-    return True
 
 def update():
     gfw.world.update()
@@ -391,6 +374,10 @@ def handle_event(e):
             mapchange(TOWN, (26.56, 483.82))
         elif player.pos[1] >= 1718:
             mapchange(FARM, (2754.34, 85.05))
+
+    elif current_map == ANIMALSHOP:
+        if player.pos[1] <= 0:
+            mapchange(FOREST, (1734.62, 740.94))
 
 def resume():
     global player

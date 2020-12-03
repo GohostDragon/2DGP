@@ -129,6 +129,16 @@ class Shop_UI:
                     if 930 + 64 * x < self.mouse_pos[0] < 930 + 64 * x + 54 and posy - 34 < self.mouse_pos[1] < posy - 34 + 17 * 4:
                         if self.inven[y][x].item not in range(5):
                             self.inven[y][x].useItem()
+                            if self.inven[y][x].item == 10:
+                                self.money += 100
+                            elif self.inven[y][x].item == 11:
+                                self.money += 200
+                            elif self.inven[y][x].item == 12:
+                                self.money += 300
+                            elif self.inven[y][x].item == 13:
+                                self.money += 200
+                            else:
+                                self.money += 1
 
             for y in range(4):
                 if 700 < self.mouse_pos[0] < 1720 and 768-108*y < self.mouse_pos[

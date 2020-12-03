@@ -19,7 +19,7 @@ center_y = canvas_height // 2
 FARM_XBOARD = 80
 FARM_YBOARD = 65
 
-FILE_NAME = 'Shop_Tile.pickle'
+FILE_NAME = 'Animalshop_Tile.pickle'
 
 class Player:
     KEY_MAP = {
@@ -122,11 +122,11 @@ def enter():
     player = Player()
     gfw.world.add(gfw.layer.player, player)
 
-    bg = InBackground('shop.jpg')
+    #bg = InBackground('shop.jpg')
     #bg = InBackground('barnmap.jpg')
     #bg = FixedBackground('farm.jpg')
     #bg = FixedBackground('forest.jpg')
-    #bg = FixedBackground('forest.jpg')
+    bg = FixedBackground('animalshop.jpg')
     # bg = gfw.image.load(gobj.RES_DIR + '/map/home.jpg')
 
     player.bg = bg
