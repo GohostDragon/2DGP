@@ -10,6 +10,7 @@ from game_time import Game_Time
 
 import menu_state
 import shop_state
+import animalshop_state
 import pickle
 
 canvas_width = 1920
@@ -19,7 +20,7 @@ FARM_XBOARD = 80
 FARM_YBOARD = 65
 
 HOME, FARM, TOWN, SHOP, COOP, BARN, FOREST, ANIMALSHOP = range(8)
-MENU_STATE, SHOP_STATE = range(2)
+MENU_STATE, SHOP_STATE, ANIMALSHOP_STATE = range(3)
 
 whostate = 0
 
@@ -161,6 +162,13 @@ def shpstatchange():
     shop_state.money = main_ui.money
     whostate = SHOP_STATE
     gfw.push(shop_state)
+
+def animalshpstatchange():
+    global whostate, main_ui
+    shop_state.inven = player.inven
+    shop_state.money = main_ui.money
+    whostate = ANIMALSHOP_STATE
+    gfw.push(animalshop_state)
 
 def enter():
     gfw.world.init(['bg','tile', 'object', 'player','ui'])
@@ -357,6 +365,10 @@ def handle_event(e):
             player.set_pause()
             shpstatchange()
 
+        elif e.key == SDLK_j:
+            player.set_pause()
+            animalshpstatchange()
+
         elif e.key == SDLK_z:
             game_time.nextday()
             for y in range(FARM_YBOARD):
@@ -387,7 +399,7 @@ def handle_event(e):
                     bg_music = load_music(gobj.RES_BG+'1-18 Load Game.mp3')
                     bg_music.repeat_play()
                     sleeping = 50
-                    
+
             elif current_map == SHOP:
                 if 9 <= player_xindex <= 10 and player_yindex == 8:
                     player.set_pause()
