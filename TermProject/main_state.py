@@ -8,6 +8,8 @@ from background import *
 from main_ui import Main_UI
 from game_time import Game_Time
 
+from animal import *
+
 import menu_state
 import shop_state
 import animalshop_state
@@ -143,6 +145,16 @@ def mapchange(map, pos):
             bg_tile[y][x].pos = (x, y)
             gfw.world.add(gfw.layer.object, bg_tile[y][x])
 
+    if current_map == COOP:
+        for i in range(len(animals)):
+            if animals[i].name == 'chicken':
+                gfw.world.add(gfw.layer.object, animals[i])
+
+    if current_map == BARN:
+        for i in range(len(animals)):
+            if animals[i].name == 'cow':
+                gfw.world.add(gfw.layer.object, animals[i])
+
     player.farm_objects = bg_tile
     player.current_map = current_map
     player.bg = bg
@@ -165,8 +177,9 @@ def shpstatchange():
 
 def animalshpstatchange():
     global whostate, main_ui
-    shop_state.inven = player.inven
-    shop_state.money = main_ui.money
+    animalshop_state.inven = player.inven
+    animalshop_state.money = main_ui.money
+    animalshop_state.animals = animals
     whostate = ANIMALSHOP_STATE
     gfw.push(animalshop_state)
 
@@ -311,6 +324,13 @@ def enter():
     global font
     font = gfw.font.load(gobj.RES_DIR + '/ENCR10B.TTF', 30)
 
+    global animals
+    animals = []
+    #animals.append(Chicken((canvas_width//2, canvas_height//2)))
+    #animals.append(Cow((canvas_width // 2, canvas_height // 2)))
+
+    player.animals = animals
+
 def update():
     gfw.world.update()
 
@@ -322,7 +342,7 @@ def update():
         bg_music = load_music(gobj.RES_BG + '1-02 Cloud Country.mp3')
         bg_music.repeat_play()
 
-        global game_time, farmtile, bg_tile, player
+        global game_time, farmtile, bg_tile, player, animals
         game_time.nextday()
         player.health = 160
         for y in range(FARM_YBOARD):
@@ -330,6 +350,11 @@ def update():
                 if farmtile[y][x] == 2 and bg_tile[y][x].tile in range(4, 8):
                     farmtile[y][x] = 1
                     bg_tile[y][x].growup()
+
+        for i in range(len(animals)):
+            if animals[i].feed == True:
+                animals[i].product = True
+            animals[i].feed = False
 
         sleeping = 0
 
@@ -350,7 +375,7 @@ def draw():
     # gobj.draw_collision_box()
     
 def handle_event(e):
-    global player, farmtile, bg_tile, farm_objects, game_time
+    global player, farmtile, bg_tile, farm_objects, game_time, animals
     # prev_dx = boy.dx
     if e.type == SDL_QUIT:
         gfw.quit()
@@ -360,6 +385,10 @@ def handle_event(e):
         elif e.key == SDLK_e:
             player.set_pause()
             start()
+
+        elif e.key == SDLK_m:
+            global main_ui
+            main_ui.money += 3000
 
         elif e.key == SDLK_k:
             player.set_pause()
@@ -405,11 +434,18 @@ def handle_event(e):
                     player.set_pause()
                     shpstatchange()
 
+            elif current_map == ANIMALSHOP:
+                if 10 <= player_xindex <= 11 and player_yindex == 2:
+                    player.set_pause()
+                    animalshpstatchange()
+
     player.farmtile = farmtile
     player.farm_objects = bg_tile
+    player.animals = animals
     player.handle_event(e)
     farmtile = player.farmtile
     bg_tile = player.farm_objects
+    animals = player.animals
 
     if current_map == FARM:
         if 5360 <= player.pos[0]:
@@ -435,12 +471,16 @@ def handle_event(e):
             mapchange(FOREST, (1734.62, 740.94))
 
 def resume():
-    global player
+    global player, animals
     if whostate == MENU_STATE:
         player.inven = menu_state.inven
     elif whostate == SHOP_STATE:
         player.inven = shop_state.inven
         main_ui.money = shop_state.money
+    elif whostate == ANIMALSHOP_STATE:
+        player.inven = animalshop_state.inven
+        animals = animalshop_state.animals
+        main_ui.money = animalshop_state.money
 
 
 def pause():

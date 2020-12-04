@@ -5,15 +5,16 @@ from animalshop_ui import animalShop_UI
 from main_ui import Main_UI
 
 inven = [[0] * 13 for i in range(3)]
+animals = []
 money = 0
 
 def build_world():
     global animalshop_ui
-    animalshop_ui = animalShop_UI(inven, money)
+    animalshop_ui = animalShop_UI(inven, money, animals)
     gfw.world.add(gfw.layer.ui, animalshop_ui)
 
     global main_ui
-    main_ui = Main_UI(872, 366)
+    main_ui = Main_UI(1123, 702)
     main_ui.money = money
     main_ui.display = money
     gfw.world.add(gfw.layer.ui, main_ui)

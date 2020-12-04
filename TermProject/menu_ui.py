@@ -95,6 +95,12 @@ class Menu_UI:
                         self.item_image.clip_draw(16 * 22, 16 * 26, 16, 16, 604 + 64 * x, posy, 17 * 3, 17 * 3)
                     elif self.inven[y][x].item == 13:
                         self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, 604 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 14:
+                        self.item_image.clip_draw(16 * 10, 16 * 26, 16, 16, 604 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 15:
+                        self.item_image.clip_draw(16 * 6, 16 * 26, 16, 16, 604 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 16:
+                        self.item_image.clip_draw(16 * 6, 16 * 15, 16, 16, 604 + 64 * x, posy, 17 * 3, 17 * 3)
 
                     if self.inven[y][x].item > 5:
                         self.font.draw(604 + 64 * x + 10, posy - 25, str(self.inven[y][x].count), (255, 255, 255))
@@ -126,14 +132,12 @@ class Menu_UI:
                     self.item_image.clip_draw(16 * 22, 16 * 26, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
                 elif self.select == 13:
                     self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
-                '''
-                elif self.select == 14:#풀, 나무, 돌
-                    self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 14:
+                    self.item_image.clip_draw(16 * 10, 16 * 26, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
                 elif self.select == 15:
-                    self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                    self.item_image.clip_draw(16 * 6, 16 * 26, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
                 elif self.select == 16:
-                    self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
-                '''
+                    self.item_image.clip_draw(16 * 6, 16 * 15, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
 
 
     def handle_event(self, e):

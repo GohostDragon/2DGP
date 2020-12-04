@@ -70,6 +70,12 @@ class Shop_UI:
                         self.item_image.clip_draw(16 * 22, 16 * 26, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
                     elif self.inven[y][x].item == 13:
                         self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 14:
+                        self.item_image.clip_draw(16 * 10, 16 * 26, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 15:
+                        self.item_image.clip_draw(16 * 6, 16 * 26, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
+                    elif self.inven[y][x].item == 16:
+                        self.item_image.clip_draw(16 * 6, 16 * 15, 16, 16, 964 + 64 * x, posy, 17 * 3, 17 * 3)
 
                     if self.inven[y][x].item > 5:
                         self.font.draw(964 + 64 * x + 10, posy - 25, str(self.inven[y][x].count), (255, 255, 255))
@@ -101,6 +107,12 @@ class Shop_UI:
                     self.item_image.clip_draw(16 * 22, 16 * 26, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
                 elif self.select == 13:
                     self.item_image.clip_draw(16 * 0, 16 * 25, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 14:
+                    self.item_image.clip_draw(16 * 10, 16 * 26, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 15:
+                    self.item_image.clip_draw(16 * 6, 16 * 26, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
+                elif self.select == 16:
+                    self.item_image.clip_draw(16 * 6, 16 * 15, 16, 16, *self.mouse_pos, 17 * 3, 17 * 3)
 
     def seekinven(self, item):
         for y in range(3):
@@ -130,13 +142,17 @@ class Shop_UI:
                         if self.inven[y][x].item not in range(5):
                             self.inven[y][x].useItem()
                             if self.inven[y][x].item == 10:
-                                self.money += 100
+                                self.money += 50
                             elif self.inven[y][x].item == 11:
-                                self.money += 200
+                                self.money += 110
                             elif self.inven[y][x].item == 12:
-                                self.money += 300
+                                self.money += 175
                             elif self.inven[y][x].item == 13:
-                                self.money += 200
+                                self.money += 150
+                            elif self.inven[y][x].item == 15:
+                                self.money += 50
+                            elif self.inven[y][x].item == 16:
+                                self.money += 100
                             else:
                                 self.money += 1
 

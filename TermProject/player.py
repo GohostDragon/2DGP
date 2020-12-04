@@ -3,7 +3,7 @@ from pico2d import *
 import gfw
 import gobj
 
-HOME, FARM, TOWN, SHOP = range(4)
+HOME, FARM, TOWN, SHOP, COOP, BARN, FOREST, ANIMALSHOP = range(8)
 
 class Inven:
     def __init__(self):
@@ -118,11 +118,15 @@ class Player:
             self.inven[0][i].inputItem(i + 1, 1)
         self.inven[0][5].inputItem(6, 3)
 
+        self.inven[0][6].inputItem(14, 3)
+
         self.equip = self.inven[0][0].item
         self.farm_objects = []
 
         self.current_map = HOME
         self.health = 160
+
+        self.animals = []
 
     def drawitemrec(self):
         draw_rectangle(*self.iven_pos, self.iven_pos[0] + 65, self.iven_pos[1] + 70)
@@ -180,6 +184,12 @@ class Player:
                 self.item_image.clip_draw(16*22, 16*26, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
             elif self.inven[0][i].item == 13:
                 self.item_image.clip_draw(16*0, 16*25, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
+            elif self.inven[0][i].item == 14:
+                self.item_image.clip_draw(16*10, 16*26, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
+            elif self.inven[0][i].item == 15:
+                self.item_image.clip_draw(16*6, 16*26, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
+            elif self.inven[0][i].item == 16:
+                self.item_image.clip_draw(16*6, 16*15, 16, 16, 604 + 64 * i + 5, invenui_y, 17 * 3, 17 * 3)
 
             if self.inven[0][i].item > 5:
                 self.font.draw(604 + 64 * i + 10, invenui_y - 25, str(self.inven[0][i].count), (255, 255, 255))
@@ -219,6 +229,18 @@ class Player:
                 for cx in range(80):
                     if self.farm_objects[cy][cx].col == True:
                         if gobj.collides_box(self, self.farm_objects[cy][cx]):
+                            x, y = self.pos
+
+            if self.current_map == COOP:
+                for i in range(len(self.animals)):
+                    if self.animals[i].name == 'chicken':
+                        if gobj.collides_box(self, self.animals[i]):
+                            x, y = self.pos
+
+            if self.current_map == BARN:
+                for i in range(len(self.animals)):
+                    if self.animals[i].name == 'cow':
+                        if gobj.collides_box(self, self.animals[i]):
                             x, y = self.pos
 
             self.pos = x,y
@@ -396,6 +418,25 @@ class Player:
                             self.farm_objects[self.y_tile][self.x_tile].setgrowmaxlevel(6)
                             self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
 
+                elif self.equip == 14:
+                    if self.current_map == COOP:
+                        for i in range(len(self.animals)):
+                            if self.animals[i].name == 'chicken' and self.animals[i].feed == False:
+                                animal_xindex = (int)(self.animals[i].pos[0] // 68)
+                                animal_yindex = (int)((self.animals[i].pos[1] - 20) // 82)
+                                if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex):
+                                    self.animals[i].feed = True
+                                    self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
+
+                    elif self.current_map == BARN:
+                        for i in range(len(self.animals)):
+                            if self.animals[i].name == 'cow' and self.animals[i].feed == False:
+                                animal_xindex = (int)(self.animals[i].pos[0] // 68)
+                                animal_yindex = (int)((self.animals[i].pos[1] - 20) // 82)
+                                if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex):
+                                    self.animals[i].feed = True
+                                    self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
+
             elif e.button == SDL_BUTTON_RIGHT:
                 if self.farm_objects[self.y_tile][self.x_tile].tile in range(4, 8):
                     if self.farm_objects[self.y_tile][self.x_tile].grow == self.farm_objects[self.y_tile][self.x_tile].maxlevel:
@@ -403,6 +444,26 @@ class Player:
                         ix, iy = self.seekinven(harvest)
                         self.inven[iy][ix].giveItem(harvest, 1)
                         self.farm_objects[self.y_tile][self.x_tile].tile = 0
+
+                if self.current_map == COOP:
+                    for i in range(len(self.animals)):
+                        if self.animals[i].name == 'chicken' and self.animals[i].product:
+                            animal_xindex = (int)(self.animals[i].pos[0] // 68)
+                            animal_yindex = (int)((self.animals[i].pos[1] - 20) // 82)
+                            if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex):
+                                ix, iy = self.seekinven(15)
+                                self.inven[iy][ix].giveItem(15, 1)#15
+                                self.animals[i].product = False
+
+                if self.current_map == BARN:
+                    for i in range(len(self.animals)):
+                        if self.animals[i].name == 'cow' and self.animals[i].product:
+                            animal_xindex = (int)(self.animals[i].pos[0] // 68)
+                            animal_yindex = (int)((self.animals[i].pos[1] - 20) // 82)
+                            if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex):
+                                ix, iy = self.seekinven(16)
+                                self.inven[iy][ix].giveItem(16, 1)#15
+                                self.animals[i].product = False
 
 
 
