@@ -23,7 +23,7 @@ class Chicken:
         sx = self.fidx * 16
 
         self.image.clip_draw(sx, 0, 16, 16, *self.pos, 16*4, 16*4)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def handle_event(self, e):
         pass
@@ -54,7 +54,7 @@ class Cow:
         sx = self.fidx * 32
 
         self.image.clip_draw(sx, 0, 32, 32, *self.pos, 4*32, 4*32)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def handle_event(self, e):
         pass

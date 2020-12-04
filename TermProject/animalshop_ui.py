@@ -7,6 +7,10 @@ from animal import *
 canvas_width = 1920
 canvas_height = 1080
 
+animal_max = 3
+chicken_count = 0
+cow_count = 0
+
 class animalShop_UI:
     bullets = []
     trashcan = []
@@ -69,15 +73,29 @@ class animalShop_UI:
 
             elif 705 <= self.mouse_pos[0] <= 807 and 464 <= self.mouse_pos[1] <= 525:
                 price = 800
-                if self.money >= price:
+                global chicken_count
+                if self.money >= price and chicken_count < animal_max:
                     self.money -= price
-                    self.animals.append(Chicken((canvas_width//2, canvas_height//2)))
+                    if chicken_count == 0:
+                        self.animals.append(Chicken((851.84, 645.13)))
+                    elif chicken_count == 1:
+                        self.animals.append(Chicken((1185.04, 561.68)))
+                    elif chicken_count == 2:
+                        self.animals.append(Chicken((1051.23, 405.02)))
+                    chicken_count += 1
 
             elif 868 <= self.mouse_pos[0] <= 943 and 464 <= self.mouse_pos[1] <= 525:
                 price = 1500
-                if self.money >= price:
+                global cow_count
+                if self.money >= price and cow_count < animal_max:
                     self.money -= price
-                    self.animals.append(Cow((canvas_width // 2, canvas_height // 2)))
+                    if cow_count == 0:
+                        self.animals.append(Cow((777.40, 726.87)))
+                    elif cow_count == 1:
+                        self.animals.append(Cow((1259.60, 572.68)))
+                    elif cow_count == 2:
+                        self.animals.append(Cow((850.22, 403.32)))
+                    cow_count += 1
 
             elif 1022 <= self.mouse_pos[0] <= 1096 and 464 <= self.mouse_pos[1] <= 525:
                 price = 30

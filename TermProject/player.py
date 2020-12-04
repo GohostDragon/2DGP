@@ -199,7 +199,7 @@ class Player:
 
         self.ui_image[1].clip_draw_to_origin(683, 2256 - 2084, 7, 4, 1868, 63, 26, self.health)
 
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def seekinven(self, item):
         for y in range(3):

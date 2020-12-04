@@ -90,8 +90,6 @@ def handle_event(e):
             gfw.pop()
 
 IMAGE_FILES = [
-    "res/kpu_1280x960.png",
-    "res/animation_sheet.png",
     "res/walk_sheet.png",
     "res/spring_outdoorsTileSheet.ko-KR.png",
     "res/ax_sheet.png",

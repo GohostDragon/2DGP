@@ -15,6 +15,8 @@ import shop_state
 import animalshop_state
 import pickle
 
+MAP_DATA_DIR = 'mapdata'
+
 canvas_width = 1920
 canvas_height = 1080
 
@@ -25,6 +27,8 @@ HOME, FARM, TOWN, SHOP, COOP, BARN, FOREST, ANIMALSHOP = range(8)
 MENU_STATE, SHOP_STATE, ANIMALSHOP_STATE = range(3)
 
 whostate = 0
+
+FARM_WORLD = []
 
 class Portal:
     def __init__(self, pos, nextmap, nextpos, key):
@@ -57,13 +61,14 @@ class Map_Tile:
         pass
 
     def draw(self):
-        for y in range(FARM_YBOARD):
-            for x in range(FARM_XBOARD):
-                hompos = bg.to_screen((68 * x, 82 * y))
-                if farmtile[y][x] == 1:
-                    self.hoedirt.clip_draw_to_origin(0, 64 - 16, 16, 16, *hompos,68,82)
-                elif farmtile[y][x] == 2:
-                    self.hoedirt.clip_draw_to_origin(16*4, 64 - 16, 16, 16, *hompos, 68, 82)
+        if current_map == FARM:
+            for y in range(FARM_YBOARD):
+                for x in range(FARM_XBOARD):
+                    hompos = bg.to_screen((68 * x, 82 * y))
+                    if farmtile[y][x] == 1:
+                        self.hoedirt.clip_draw_to_origin(0, 64 - 16, 16, 16, *hompos,68,82)
+                    elif farmtile[y][x] == 2:
+                        self.hoedirt.clip_draw_to_origin(16*4, 64 - 16, 16, 16, *hompos, 68, 82)
 
     def update(self):
         pass
@@ -119,9 +124,12 @@ class Tile_Object:
         self.bgpos = bg.to_screen((68 * self.pos[0], 82 * self.pos[1]))
 
 def mapchange(map, pos):
-    global current_map, player, bg, bg_tile, mapdatalist
+    global current_map, player, bg, bg_tile, mapdatalist, FARM_WORLD
     mapno = worldmap[current_map].data
     mapdatalist[mapno] = player.farm_objects
+
+    if worldmap[current_map].data == FARM:
+        FARM_WORLD = player.farm_objects
 
     gfw.world.clear_at(gfw.layer.object)
 
@@ -254,6 +262,9 @@ def enter():
     player = Player()
     gfw.world.add(gfw.layer.player, player)
 
+    tile = Map_Tile()
+    gfw.world.add(gfw.layer.tile, tile)
+
     bg_music = load_music(gobj.RES_BG + '1-02 Cloud Country.mp3')
     bg_music.repeat_play()
     player.bg = bg
@@ -262,36 +273,36 @@ def enter():
 
     mapdatalist = []
 
-    f = open('HOME_Tile.pickle', "rb")
+    f = open(MAP_DATA_DIR + '/HOME_Tile.pickle', "rb")
     mapdatalist.append(pickle.load(f))
     f.close()
 
-    f = open('Farm_Tile.pickle', "rb")
+    f = open(MAP_DATA_DIR + '/Farm_Tile.pickle', "rb")
     mapdatalist.append(pickle.load(f))
     f.close()
 
-    f = open('Town_Tile.pickle', "rb")
+    f = open(MAP_DATA_DIR + '/Town_Tile.pickle', "rb")
     mapdatalist.append(pickle.load(f))
     f.close()
 
-    f = open('Shop_Tile.pickle', "rb")
+    f = open(MAP_DATA_DIR + '/Shop_Tile.pickle', "rb")
     mapdatalist.append(pickle.load(f))
     f.close()
 
 #coop
-    f = open('Coop_Tile.pickle', "rb")
+    f = open(MAP_DATA_DIR + '/Coop_Tile.pickle', "rb")
     mapdatalist.append(pickle.load(f))
     f.close()
 #barn
-    f = open('Barn_Tile.pickle', "rb")
+    f = open(MAP_DATA_DIR + '/Barn_Tile.pickle', "rb")
     mapdatalist.append(pickle.load(f))
     f.close()
 #forest
-    f = open('Forest_Tile.pickle', "rb")
+    f = open(MAP_DATA_DIR + '/Forest_Tile.pickle', "rb")
     mapdatalist.append(pickle.load(f))
     f.close()
 # animalshop
-    f = open('Animalshop_Tile.pickle', "rb")
+    f = open(MAP_DATA_DIR + '/Animalshop_Tile.pickle', "rb")
     mapdatalist.append(pickle.load(f))
     f.close()
 
@@ -342,14 +353,16 @@ def update():
         bg_music = load_music(gobj.RES_BG + '1-02 Cloud Country.mp3')
         bg_music.repeat_play()
 
-        global game_time, farmtile, bg_tile, player, animals
+        global game_time, farmtile, bg_tile, player, animals, FARM_WORLD
         game_time.nextday()
         player.health = 160
         for y in range(FARM_YBOARD):
             for x in range(FARM_XBOARD):
-                if farmtile[y][x] == 2 and bg_tile[y][x].tile in range(4, 8):
+                if farmtile[y][x] == 2 and FARM_WORLD[y][x].tile in range(4, 8):
                     farmtile[y][x] = 1
-                    bg_tile[y][x].growup()
+                    FARM_WORLD[y][x].growup()
+
+        mapdatalist[FARM] = FARM_WORLD
 
         for i in range(len(animals)):
             if animals[i].feed == True:
@@ -362,11 +375,13 @@ def draw():
     global bg
     gfw.world.draw()
 
+    '''
     for y in range(FARM_YBOARD):
         for x in range(FARM_XBOARD):
             minrec = bg.to_screen((68 * x, 82* (y)))
             maxrec = bg.to_screen((68 * (x+1), 82* (y+1)))
             draw_rectangle(*minrec,*maxrec)
+    '''
 
     if sleeping > 0:
         global font

@@ -4,7 +4,6 @@ import main_state
 import gobj
 import random
 import loading_state
-import tile_object
 
 canvas_width = main_state.canvas_width
 canvas_height = main_state.canvas_height
