@@ -9,7 +9,7 @@ animals = []
 money = 0
 
 def build_world():
-    global animalshop_ui
+    global animalshop_ui, quit_sound
     animalshop_ui = animalShop_UI(inven, money, animals)
     gfw.world.add(gfw.layer.ui, animalshop_ui)
 
@@ -18,6 +18,8 @@ def build_world():
     main_ui.money = money
     main_ui.display = money
     gfw.world.add(gfw.layer.ui, main_ui)
+
+    quit_sound = load_wav(gobj.RES_EF + 'bigDeSelect.wav')
 
 def enter():
     build_world()
@@ -38,6 +40,7 @@ def handle_event(e):
         return gfw.quit()
     elif e.type == SDL_KEYDOWN:
         if e.key == SDLK_ESCAPE or e.key == SDLK_e:
+            quit_sound.play()
             return gfw.pop()
 
     animalshop_ui.handle_event(e)

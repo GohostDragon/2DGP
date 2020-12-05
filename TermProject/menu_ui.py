@@ -33,6 +33,9 @@ class Menu_UI:
 
         self.selectui = 0
 
+        self.select_sound = load_wav(gobj.RES_EF + 'bigSelect.wav')
+        self.quit_sound = load_wav(gobj.RES_EF + 'bigDeSelect.wav')
+
     def reset(self):
         pass
 
@@ -148,6 +151,7 @@ class Menu_UI:
                 if i != self.selectui:
                     if 600 + (i * 16 * 4) - 16 * 2< self.mouse_pos[0] < 600 + (i * 16 * 4) + 16 * 4 and 850 - 16*2< self.mouse_pos[1]  < 850 - 16*2 +16*4:
                         self.selectui = i
+                        self.select_sound.play()
 
 
             if self.selectui == 0:
@@ -184,13 +188,16 @@ class Menu_UI:
                     self.select = 0
             elif self.selectui == 1:
                 if 1501 < self.mouse_pos[0] < 1534 and 853 < self.mouse_pos[1] < 885:
+                    self.quit_sound.play()
                     return gfw.pop()
 
                 if 1472 < self.mouse_pos[0] < 1518 and 202 < self.mouse_pos[1] < 251:
                     self.selectui = 0
+                    self.select_sound.play()
 
             elif self.selectui == 2:
                 if 858 < self.mouse_pos[0] < 1059 and 460 < self.mouse_pos[1] < 547:
+                    self.select_sound.play()
                     return gfw.quit()
 
         elif e.type == SDL_MOUSEMOTION:

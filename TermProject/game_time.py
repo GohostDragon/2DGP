@@ -32,8 +32,10 @@ class Game_Time:
 
     def draw(self):
         self.font.draw(1760, get_canvas_height() - 50, self.week[self.game_week] + '. ' + str(self.game_day) + '일', (24, 10, 31))
-        self.font.draw(1735, get_canvas_height() - 142, str(self.game_time[0]).zfill(2) + ':' + str(self.game_time[1]).zfill(2) + 'am',(24, 10, 31))
-
+        if self.game_time[0] < 21:
+            self.font.draw(1735, get_canvas_height() - 142, str(self.game_time[0]).zfill(2) + ':' + str(self.game_time[1]).zfill(2) + 'am',(24, 10, 31))
+        else:
+            self.font.draw(1735, get_canvas_height() - 142, str(self.game_time[0]).zfill(2) + ':' + str(self.game_time[1]).zfill(2) + 'am', (255, 0, 0))
     def nextday(self):
         self.game_day += 1
         if self.game_day > 28:

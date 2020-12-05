@@ -9,10 +9,10 @@ inven = [[0] * 13 for i in range(3)]
 current_map = 0
 
 def build_world():
-    global menu_ui
+    global menu_ui, quit_sound
     menu_ui = Menu_UI(inven, current_map)
     gfw.world.add(gfw.layer.ui, menu_ui)
-
+    quit_sound = load_wav(gobj.RES_EF + 'bigDeSelect.wav')
 
 def enter():
     build_world()
@@ -32,6 +32,7 @@ def handle_event(e):
         return gfw.quit()
     elif e.type == SDL_KEYDOWN:
         if e.key == SDLK_ESCAPE or e.key == SDLK_e:
+            quit_sound.play()
             return gfw.pop()
 
     menu_ui.handle_event(e)

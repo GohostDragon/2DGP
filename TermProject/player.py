@@ -94,6 +94,11 @@ class Player:
         self.tool_effect_sound = []
         self.tool_effect_sound.append(load_wav(gobj.RES_EF + 'hoeHit.wav'))
         self.tool_effect_sound.append(load_wav(gobj.RES_EF + 'axchop.wav'))
+        self.tool_effect_sound.append(load_wav(gobj.RES_EF + 'axe.wav'))
+        self.tool_effect_sound.append(load_wav(gobj.RES_EF + 'waterlap3.wav'))
+        self.tool_effect_sound.append(load_wav(gobj.RES_EF + 'hoe.wav'))
+
+        self.sound_milk = load_wav(gobj.RES_EF + 'Milking.wav')
 
         self.state = Player.RUNNING
         self.time = 0
@@ -256,7 +261,7 @@ class Player:
             if self.current_map == FARM:
                 if self.equip == 1:
                     if self.farm_objects[self.y_tile][self.x_tile].tile == 0 and self.farm_objects[self.y_tile][self.x_tile].col == False:
-                        if 32 <= self.x_tile <= 75 and 13 <= self.y_tile <= 38:
+                        if 2 <= self.x_tile <= 75 and 3 <= self.y_tile <= 38:
                             self.farmtile[self.y_tile][self.x_tile] = 1
 
                 elif self.equip == 2:
@@ -351,7 +356,7 @@ class Player:
                     self.health -= 5
                     if self.health < 0:
                         self.health = 0
-                    #self.tool_effect_sound[self.state-1].play()
+                    self.tool_effect_sound[self.state-1].play()
 
                     if self.equip == 1:
                         if self.action == 1:
@@ -424,18 +429,20 @@ class Player:
                             if self.animals[i].name == 'chicken' and self.animals[i].feed == False:
                                 animal_xindex = (int)(self.animals[i].pos[0] // 68)
                                 animal_yindex = (int)((self.animals[i].pos[1] - 20) // 82)
-                                if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex):
+                                if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex) or (player_xindex, player_yindex) == (animal_xindex, animal_yindex):
                                     self.animals[i].feed = True
                                     self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
+                                    self.animals[i].sound.play()
 
                     elif self.current_map == BARN:
                         for i in range(len(self.animals)):
                             if self.animals[i].name == 'cow' and self.animals[i].feed == False:
                                 animal_xindex = (int)(self.animals[i].pos[0] // 68)
                                 animal_yindex = (int)((self.animals[i].pos[1] - 20) // 82)
-                                if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex):
+                                if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex) or (player_xindex, player_yindex) == (animal_xindex, animal_yindex):
                                     self.animals[i].feed = True
                                     self.inven[0][(self.iven_pos[0] - 573) // 64].useItem()
+                                    self.animals[i].sound.play()
 
             elif e.button == SDL_BUTTON_RIGHT:
                 if self.farm_objects[self.y_tile][self.x_tile].tile in range(4, 8):
@@ -450,7 +457,7 @@ class Player:
                         if self.animals[i].name == 'chicken' and self.animals[i].product:
                             animal_xindex = (int)(self.animals[i].pos[0] // 68)
                             animal_yindex = (int)((self.animals[i].pos[1] - 20) // 82)
-                            if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex):
+                            if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex) or (player_xindex, player_yindex) == (animal_xindex, animal_yindex):
                                 ix, iy = self.seekinven(15)
                                 self.inven[iy][ix].giveItem(15, 1)#15
                                 self.animals[i].product = False
@@ -460,10 +467,11 @@ class Player:
                         if self.animals[i].name == 'cow' and self.animals[i].product:
                             animal_xindex = (int)(self.animals[i].pos[0] // 68)
                             animal_yindex = (int)((self.animals[i].pos[1] - 20) // 82)
-                            if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex):
+                            if (self.x_tile, self.y_tile) == (animal_xindex, animal_yindex) or (player_xindex, player_yindex) == (animal_xindex, animal_yindex):
                                 ix, iy = self.seekinven(16)
                                 self.inven[iy][ix].giveItem(16, 1)#15
                                 self.animals[i].product = False
+                                self.sound_milk.play()
 
 
 

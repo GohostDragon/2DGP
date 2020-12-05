@@ -27,6 +27,9 @@ class Shop_UI:
 
         self.money = money
 
+        self.purchase_sound = load_wav(gobj.RES_EF + 'purchaseClick.wav')
+        self.sell_sound = load_wav(gobj.RES_EF + 'sell.wav')
+
     def reset(self):
         pass
 
@@ -155,6 +158,7 @@ class Shop_UI:
                                 self.money += 100
                             else:
                                 self.money += 1
+                            self.sell_sound.play()
 
             for y in range(4):
                 if 700 < self.mouse_pos[0] < 1720 and 768-108*y < self.mouse_pos[
@@ -165,24 +169,28 @@ class Shop_UI:
                             self.money -= price
                             ix, iy = self.seekinven(6)
                             self.inven[iy][ix].giveItem(6, 1)
+                            self.purchase_sound.play()
                     elif y == 1:
                         price = 60
                         if self.money >= price:
                             self.money -= price
                             ix, iy = self.seekinven(7)
                             self.inven[iy][ix].giveItem(7, 1)
+                            self.purchase_sound.play()
                     elif y == 2:
                         price = 80
                         if self.money >= price:
                             self.money -= price
                             ix, iy = self.seekinven(8)
                             self.inven[iy][ix].giveItem(8, 1)
+                            self.purchase_sound.play()
                     elif y == 3:
                         price = 50
                         if self.money >= price:
                             self.money -= price
                             ix, iy = self.seekinven(9)
                             self.inven[iy][ix].giveItem(9, 1)
+                            self.purchase_sound.play()
 
 
 

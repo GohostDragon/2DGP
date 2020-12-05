@@ -89,6 +89,7 @@ class Tile_Object:
         self.tile_object = gfw.image.load(gobj.RES_DIR + '/object/springobjects.ko-KR.png')
         self.crop_object = gfw.image.load(gobj.RES_DIR + '/object/crops.png')
         self.grow = 0
+        self.maxlevel = 0
 
     def deleteobject(self):
         self.tile = 0
@@ -124,15 +125,34 @@ class Tile_Object:
         self.bgpos = bg.to_screen((68 * self.pos[0], 82 * self.pos[1]))
 
 def mapchange(map, pos):
-    global current_map, player, bg, bg_tile, mapdatalist, FARM_WORLD
+    global current_map, player, bg, bg_tile, mapdatalist, FARM_WORLD, bg_music
     mapno = worldmap[current_map].data
     mapdatalist[mapno] = player.farm_objects
 
-    if worldmap[current_map].data == FARM:
+    if current_map == FARM:
         FARM_WORLD = player.farm_objects
 
     gfw.world.clear_at(gfw.layer.object)
 
+    if map == TOWN:
+        bg_music.stop()
+        bg_music = town_music
+        bg_music.repeat_play()
+
+    elif map == SHOP or map == ANIMALSHOP:
+        bg_music.stop()
+        bg_music = shop_music
+        bg_music.repeat_play()
+
+    elif map == FARM and current_map == TOWN:
+        bg_music.stop()
+        bg_music = farm_music
+        bg_music.repeat_play()
+
+    elif map == ANIMALSHOP and current_map == TOWN:
+        bg_music.stop()
+        bg_music = farm_music
+        bg_music.repeat_play()
 
     current_map = map
     player.pos = pos
@@ -143,10 +163,13 @@ def mapchange(map, pos):
     mapno = worldmap[current_map].data
 
     bg_tile = []
-    for y in range(FARM_YBOARD):
-        bg_tile.append([])
-        for x in range(FARM_XBOARD):
-            bg_tile[y].append(Tile_Object(mapdatalist[mapno][y][x], bg))
+    if current_map == FARM and FARM_WORLD:
+        bg_tile = FARM_WORLD
+    else:
+        for y in range(FARM_YBOARD):
+            bg_tile.append([])
+            for x in range(FARM_XBOARD):
+                bg_tile[y].append(Tile_Object(mapdatalist[mapno][y][x], bg))
 
     for y in range(FARM_YBOARD):
         for x in range(FARM_XBOARD):
@@ -265,7 +288,13 @@ def enter():
     tile = Map_Tile()
     gfw.world.add(gfw.layer.tile, tile)
 
-    bg_music = load_music(gobj.RES_BG + '1-02 Cloud Country.mp3')
+    global farm_music, town_music, shop_music, sleep_music
+    farm_music = load_music(gobj.RES_BG + '1-02 Cloud Country.mp3')
+    town_music = load_music(gobj.RES_BG + '1-08 Pelican Town.mp3')
+    shop_music = load_music(gobj.RES_BG + '1-14 Country Shop.mp3')
+    sleep_music = load_music(gobj.RES_BG + '1-18 Load Game.mp3')
+
+    bg_music = farm_music
     bg_music.repeat_play()
     player.bg = bg
     gfw.world.add(gfw.layer.bg, bg)
@@ -342,6 +371,9 @@ def enter():
 
     player.animals = animals
 
+    global rooster
+    rooster = load_wav(gobj.RES_EF + 'rooster.wav')
+
 def update():
     gfw.world.update()
 
@@ -349,8 +381,9 @@ def update():
     if sleeping > 1:
         sleeping -= 1
     elif sleeping == 1:
+        rooster.play()
         bg_music.stop()
-        bg_music = load_music(gobj.RES_BG + '1-02 Cloud Country.mp3')
+        bg_music = farm_music
         bg_music.repeat_play()
 
         global game_time, farmtile, bg_tile, player, animals, FARM_WORLD
@@ -362,14 +395,21 @@ def update():
                     farmtile[y][x] = 1
                     FARM_WORLD[y][x].growup()
 
-        mapdatalist[FARM] = FARM_WORLD
-
         for i in range(len(animals)):
             if animals[i].feed == True:
                 animals[i].product = True
             animals[i].feed = False
 
         sleeping = 0
+
+    if game_time.game_time[0] > 21:
+        game_time.game_time[0] = 7
+        mapchange(HOME, (canvas_width//2, canvas_height//2))
+        bg_music.stop()
+        bg_music = sleep_music
+        bg_music.repeat_play()
+        sleeping = 20
+
 
 def draw():
     global bg
@@ -414,12 +454,14 @@ def handle_event(e):
             animalshpstatchange()
 
         elif e.key == SDLK_z:
+            global FARM_WORLD
             game_time.nextday()
             for y in range(FARM_YBOARD):
                 for x in range(FARM_XBOARD):
-                    if farmtile[y][x] == 2 and bg_tile[y][x].tile in range(4, 8):
+                    if farmtile[y][x] == 2 and FARM_WORLD[y][x].tile in range(4, 8):
                         farmtile[y][x] = 1
-                        bg_tile[y][x].growup()
+                        FARM_WORLD[y][x].growup()
+
 
         elif e.key == SDLK_a:
             player_xindex = (int)(player.pos[0] // 68)
@@ -440,9 +482,9 @@ def handle_event(e):
                 if 17 <= player_xindex <= 18 and 3 <= player_yindex <= 4:
                     global bg_music, sleeping
                     bg_music.stop()
-                    bg_music = load_music(gobj.RES_BG+'1-18 Load Game.mp3')
+                    bg_music = sleep_music
                     bg_music.repeat_play()
-                    sleeping = 50
+                    sleeping = 20
 
             elif current_map == SHOP:
                 if 9 <= player_xindex <= 10 and player_yindex == 8:
@@ -502,10 +544,13 @@ def pause():
     pass
 
 def exit():
-    global bg_music
+    global bg_music, farm_music, shop_music, town_music, sleep_music
     bg_music.stop()
     del bg_music
-
+    del farm_music
+    del shop_music
+    del town_music
+    del sleep_music
 
 if __name__ == '__main__':
     gfw.run_main()

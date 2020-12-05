@@ -58,7 +58,7 @@ class Cloud:
             self.x = canvas_width + 100
 
 def enter():
-    global back, logo, game_start, game_exit, cloud, cx, cloud, cloudMax, bg_music
+    global back, logo, game_start, game_exit, cloud, cx, cloud, cloudMax, bg_music, select_effect
     back = gfw.image.load(gobj.RES_DIR +'/logo/Stardew-Valley-Wallpaper-Wallpaper.jpg')
     logo = gfw.image.load(gobj.RES_DIR +'/logo/TitleButtons.ko-KR.png')
 
@@ -71,6 +71,7 @@ def enter():
     game_exit = gfw.image.load(gobj.RES_DIR +'/logo/TitleButtons.ko-KR.png')
     bg_music = load_music(gobj.RES_BG+'1-01 Stardew Valley Overture.mp3')
     bg_music.repeat_play()
+    select_effect = load_wav(gobj.RES_EF + 'bigSelect.wav')
 
 def exit():
     global back, logo, game_start, game_exit, bg_music
@@ -137,9 +138,11 @@ def handle_event(e):
         if center_x - 300 - 74 * scale // 2 < mouse_pos[
             0] < center_x - 300 - 74 * scale // 2 + 74 * scale and 59 * 3 - 59 * scale // 2 < mouse_pos[
             1] < 59 * 3 - 59 * scale // 2 + 59 * scale:
+            select_effect.play()
             gfw.change(loading_state)
             return
         elif center_x + 300 - 74*scale//2 < mouse_pos[0] < center_x + 300 - 74*scale//2 + 74*scale and 59*3 - 59*scale//2 < mouse_pos[1] < 59*3 - 59*scale//2 + 59*scale:
+            select_effect.play()
             gfw.quit()
 
 IMAGE_FILES = [

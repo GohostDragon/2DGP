@@ -16,13 +16,15 @@ class Chicken:
         self.feed = False
         self.product = True
 
+        self.sound = load_wav(gobj.RES_EF + 'chick.wav')
+
     def reset(self):
         pass
 
     def draw(self):
         sx = self.fidx * 16
 
-        self.image.clip_draw(sx, 0, 16, 16, *self.pos, 16*4, 16*4)
+        self.image.clip_draw(0, 0, 16, 16, *self.pos, 16*4, 16*4)
         #draw_rectangle(*self.get_bb())
 
     def handle_event(self, e):
@@ -47,13 +49,15 @@ class Cow:
         self.feed = False
         self.product = True
 
+        self.sound = load_wav(gobj.RES_EF + 'cow_moo1.wav')
+
     def reset(self):
         pass
 
     def draw(self):
         sx = self.fidx * 32
 
-        self.image.clip_draw(sx, 0, 32, 32, *self.pos, 4*32, 4*32)
+        self.image.clip_draw(0, 0, 32, 32, *self.pos, 4*32, 4*32)
         #draw_rectangle(*self.get_bb())
 
     def handle_event(self, e):

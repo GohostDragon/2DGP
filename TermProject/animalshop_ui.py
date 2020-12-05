@@ -32,6 +32,8 @@ class animalShop_UI:
 
         self.money = money
         self.mouse_pos = (0, 0)
+        self.purchase_sound = load_wav(gobj.RES_EF + 'purchaseClick.wav')
+
     def reset(self):
         pass
 
@@ -83,6 +85,7 @@ class animalShop_UI:
                     elif chicken_count == 2:
                         self.animals.append(Chicken((1051.23, 405.02)))
                     chicken_count += 1
+                    self.purchase_sound.play()
 
             elif 868 <= self.mouse_pos[0] <= 943 and 464 <= self.mouse_pos[1] <= 525:
                 price = 1500
@@ -96,6 +99,7 @@ class animalShop_UI:
                     elif cow_count == 2:
                         self.animals.append(Cow((850.22, 403.32)))
                     cow_count += 1
+                    self.purchase_sound.play()
 
             elif 1022 <= self.mouse_pos[0] <= 1096 and 464 <= self.mouse_pos[1] <= 525:
                 price = 30
@@ -103,6 +107,7 @@ class animalShop_UI:
                     self.money -= price
                     ix, iy = self.seekinven(14)
                     self.inven[iy][ix].giveItem(14, 1)
+                    self.purchase_sound.play()
 
         elif e.type == SDL_MOUSEMOTION:
             self.mouse_pos = (e.x, get_canvas_height() - 1 - e.y)
