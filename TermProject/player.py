@@ -121,9 +121,7 @@ class Player:
 
         for i in range(5):
             self.inven[0][i].inputItem(i + 1, 1)
-        self.inven[0][5].inputItem(6, 3)
-
-        self.inven[0][6].inputItem(14, 3)
+        self.inven[0][5].inputItem(6, 5)
 
         self.equip = self.inven[0][0].item
         self.farm_objects = []

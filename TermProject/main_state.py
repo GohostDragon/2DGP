@@ -149,7 +149,12 @@ def mapchange(map, pos):
         bg_music = farm_music
         bg_music.repeat_play()
 
-    elif map == ANIMALSHOP and current_map == TOWN:
+    elif map == FOREST and current_map == TOWN:
+        bg_music.stop()
+        bg_music = farm_music
+        bg_music.repeat_play()
+
+    elif map == FOREST and current_map == ANIMALSHOP:
         bg_music.stop()
         bg_music = farm_music
         bg_music.repeat_play()
@@ -431,7 +436,6 @@ def draw():
     
 def handle_event(e):
     global player, farmtile, bg_tile, farm_objects, game_time, animals
-    # prev_dx = boy.dx
     if e.type == SDL_QUIT:
         gfw.quit()
     elif e.type == SDL_KEYDOWN:
@@ -445,31 +449,6 @@ def handle_event(e):
             global main_ui
             main_ui.money += 3000
 
-        elif e.key == SDLK_k:
-            player.set_pause()
-            shpstatchange()
-
-        elif e.key == SDLK_j:
-            player.set_pause()
-            animalshpstatchange()
-
-        elif e.key == SDLK_z:
-            global FARM_WORLD
-            game_time.nextday()
-            for y in range(FARM_YBOARD):
-                for x in range(FARM_XBOARD):
-                    if farmtile[y][x] == 2 and FARM_WORLD[y][x].tile in range(4, 8):
-                        farmtile[y][x] = 1
-                        FARM_WORLD[y][x].growup()
-
-
-        elif e.key == SDLK_a:
-            player_xindex = (int)(player.pos[0] // 68)
-            player_yindex = (int)((player.pos[1] - 20) // 82)
-            print('플레이어 좌표: ' + str(player.pos))
-            print('플레이어 인덱스 좌표: ' + str(player_xindex) + ', ' + str(player_yindex))
-
-        #elif e.key == worldmap[current_map].portal[0].key:
         elif e.key == SDLK_SPACE:
             player_xindex = (int)(player.pos[0] // 68)
             player_yindex = (int)((player.pos[1] - 20) // 82)
@@ -495,6 +474,32 @@ def handle_event(e):
                 if 10 <= player_xindex <= 11 and player_yindex == 2:
                     player.set_pause()
                     animalshpstatchange()
+
+            '''
+            elif e.key == SDLK_k:
+                player.set_pause()
+                shpstatchange()
+
+            elif e.key == SDLK_j:
+                player.set_pause()
+                animalshpstatchange()
+
+            elif e.key == SDLK_z:
+                global FARM_WORLD
+                game_time.nextday()
+                for y in range(FARM_YBOARD):
+                    for x in range(FARM_XBOARD):
+                        if farmtile[y][x] == 2 and FARM_WORLD[y][x].tile in range(4, 8):
+                            farmtile[y][x] = 1
+                            FARM_WORLD[y][x].growup()
+
+
+            elif e.key == SDLK_a:
+                player_xindex = (int)(player.pos[0] // 68)
+                player_yindex = (int)((player.pos[1] - 20) // 82)
+                print('플레이어 좌표: ' + str(player.pos))
+                print('플레이어 인덱스 좌표: ' + str(player_xindex) + ', ' + str(player_yindex))
+            '''
 
     player.farmtile = farmtile
     player.farm_objects = bg_tile

@@ -10,10 +10,8 @@ center_x = canvas_width // 2
 center_y = canvas_height // 2
 
 def enter():
-    global back, bg, fg, index, file, bg_music
+    global back, index, file, bg_music
     back = gfw.image.load(res('/logo/loading.jpg'))
-    bg = gfw.image.load(res('progress_bg.png'))
-    fg = gfw.image.load(res('progress_fg.png'))
     index = 0
 
     global font, display
@@ -28,15 +26,10 @@ def enter():
     bg_music.repeat_play()
 
 def exit():
-    global back, bg, fg, bg_music
-    gfw.image.unload(res('loading_1280x960.png'))
-    gfw.image.unload(res('progress_bg.png'))
-    gfw.image.unload(res('progress_fg.png'))
+    global back, bg_music
     bg_music.stop()
     del bg_music
     del back
-    del bg
-    del fg
 
     global frame_interval
     gfw.frame_interval = frame_interval
@@ -63,26 +56,13 @@ def draw():
     image_count = len(IMAGE_FILES)
     font_count = len(FONT_PAIRS)
     progress = index / (image_count + font_count)
-    #draw_progress(center_x, 300, 680, progress)
 
     global display
     font.draw(300, 250, display)
     font.draw(50, 40, 'Loading(%.f%%)' % (progress * 100), (0, 0, 0))
 
-def draw_progress(x, y, width, rate):
-    l = x - width // 2
-    b = y - bg.h // 2
-    draw_3(bg, l, b, width, 3)
-    draw_3(fg, l, b, round(width * rate), 3)
-
-def draw_3(img, l, b, width, edge):
-    img.clip_draw_to_origin(0, 0, edge, img.h, l, b, edge, img.h)
-    img.clip_draw_to_origin(edge, 0, img.w - 2 * edge, img.h, l+edge, b, width - 2 * edge, img.h)
-    img.clip_draw_to_origin(img.w - edge, 0, edge, img.h, l+width-edge, b, edge, img.h)
-
 def handle_event(e):
     global player
-    # prev_dx = boy.dx
     if e.type == SDL_QUIT:
         gfw.quit()
     elif e.type == SDL_KEYDOWN:
