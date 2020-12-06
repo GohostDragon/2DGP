@@ -99,6 +99,7 @@ class Player:
         self.tool_effect_sound.append(load_wav(gobj.RES_EF + 'hoe.wav'))
 
         self.sound_milk = load_wav(gobj.RES_EF + 'Milking.wav')
+        self.sound_harvest = load_wav(gobj.RES_EF + 'harvest.wav')
 
         self.state = Player.RUNNING
         self.time = 0
@@ -449,6 +450,7 @@ class Player:
                         ix, iy = self.seekinven(harvest)
                         self.inven[iy][ix].giveItem(harvest, 1)
                         self.farm_objects[self.y_tile][self.x_tile].tile = 0
+                        self.sound_harvest.play()
 
                 if self.current_map == COOP:
                     for i in range(len(self.animals)):
