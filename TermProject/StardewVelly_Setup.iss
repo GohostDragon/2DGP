@@ -27,7 +27,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir=C:\Users\arrow\Desktop\2D프로그래밍
-OutputBaseFilename=StardewVelly_setup
+OutputBaseFilename=Game_2015182007_Setup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -56,4 +56,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+
+[Dirs]
+Name: {app}; Permissions: users-full 
 
