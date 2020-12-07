@@ -171,3 +171,52 @@
 ![enter image description here](https://i.esdrop.com/d/UXb0OajiUt.PNG)
 
 ![enter image description here](https://i.esdrop.com/d/C32VWWF7hd.PNG)
+
+## 최종발표
+최종 발표 내용입니다.
+## 계획 대비 진행상황
+
+![enter image description here](https://i.esdrop.com/d/a3e9AbJcFW.PNG)
+
+## 커밋
+
+![enter image description here](https://i.esdrop.com/d/XXmBn0nZgm.PNG)
+
+## 게임 조작키
+
+방향키: 캐릭터 이동
+
+스페이스바: 건물 출입, 상점이용, 상호작용
+
+쉬프트: 달리기
+
+마우스 왼쪽: 도구 사용
+
+마우스 오른쪽: 수확, 동물수확
+
+e: menu 열기
+
+esc: menu 나가기, 상점 나가기
+
+M: 돈 치트
+
+1, 2, 3, 4, 5, 6, 7, 8, 9, 10, -, + 아이템 선택
+
+## 게임 설치 전 주의사항
+
+이 게임은 1920x1080 해상도 전체화면으로 제작되었습니다.
+
+1920x1080 미만인 해상도 컴퓨터에서는 정상적으로 플레이 할 수 없을 수 있습니다.
+
+## 게임 내용
+
+**화면 구성**
+
+![enter image description here](https://i.esdrop.com/d/HvuSSqXALo.PNG)
+
+**맵구성**
+![enter image description here](https://i.esdrop.com/d/7Kfo3CMprP.PNG)
+
+## 인터뷰
+
+![enter image description here](https://i.esdrop.com/d/OUCxLTSR34.PNG)
